@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    
+    <nav>
+        <h1>Welcome to [[message]]!</h1>
+        <p><a href="{% url 'logout' %}">Logout</a></p>
+    </nav>
+    {% if user.is_authenticated %}
+        <h3>Hi {{user.username}}!</h3>
+        <p>Hello, #{{user.id}}</p>
+        <p>Lifting since: {{user.date_joined}}</p>
+    
+        
+        <div id="start_work">
+            <h2><a href="">+ New Workout</a></h2>
+        </div>
+
+        <div id="current_work">
+            <button @click="all_categories()">Categories</button>
+            <button @click="all_exercises()">List</button>
+
+            <template>
+                <exercise-item id="ex_list_div"
+                :allexercises="allExercises"
+                ></exercise-item>
+            </template>
+
+            <template>
+                <category-item id="category_div"
+                :allcategories="allCategories"
+                ></category-item>
+            </template>
+
+        </div>
+
+        
+        
+
+
+        
+    {% else %}
+        <p>You are not logged in</p>
+        <a href="{% url 'login' %}">Login</a> |
+        <a href="{% url 'signup' %}">Sign Up</a> |
+        <a href="{% url 'reset_password' %}">Forgot Password?</a>
+    {% endif %}
+    {% endblock %}
+
+

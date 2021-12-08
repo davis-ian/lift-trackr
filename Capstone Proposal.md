@@ -1,8 +1,8 @@
 #Name
-flexfeed
+lift-trackr
 
 #Overiview
-Flexfeed is a fitness based social-media platform aimed at those who want to workout with friends who are in different locations or schedules. Major features will include browing exercises / creating workouts either panned or completed, tracking workout history/progress, earning points for exercising regularly, and competing in group competitions. Flexfeed will use DjangoREST, Vue.js for frameworks; pipenv, django-filter, django.contrib.auth, and pendulum for libraries.
+Lift trackr is a fitness based social-media platform aimed at those who want to workout with friends who are in different locations or schedules. Major features will include browing exercises / creating workouts either panned or completed, tracking workout history/progress, earning points for exercising regularly, and competing in group competitions. Flexfeed will use DjangoREST, Vue.js for frameworks; pipenv, django-filter, django.contrib.auth, and pendulum for libraries.
 
 #Features
 
@@ -68,11 +68,11 @@ Exercise
 -Difficulty
 
 User  
--Userame
--Picture
--Date Joined
--Streak
--Freinds
+-Userame *
+-Picture *
+-Date Joined *
+-Streak *
+-Friends
 -Awards
 -Saved workouts
 -Current workout
@@ -111,9 +111,10 @@ Award
 
 ###1
 Projected date - 12/8
--Create user system/ register / login out pages
--create workout database
+-Create user system/ register / login out pages *
+-create workout database *
 -Save users workout history
+- Users create workout
 
 ###2
 Prjected date - 12/13
