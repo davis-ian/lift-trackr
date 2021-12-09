@@ -1,10 +1,19 @@
 
 
+
 from users.models import CustomUser
-from exercises.models import Exercise, Category, Session, ExerciseInstance
+from exercises.models import Exercise, Category, Session, ExerciseInstance, SetInstance
 from rest_framework import serializers
 
-
+class NestedSetInstanceSerializer(serializers.ModelSerializer):
+    class Meta: 
+        fields = (
+            'set',
+            'reps',
+            'weight',
+            
+        )
+        model = SetInstance
 
 class NestedExerciseSerializer(serializers.ModelSerializer):
     class Meta: 
@@ -18,14 +27,15 @@ class NestedExerciseSerializer(serializers.ModelSerializer):
         model = Exercise
 
 class NestedExerciseInstanceSerializer(serializers.ModelSerializer):
-    
+    exercise_detail = NestedExerciseSerializer(source='exercise')
+    set_detail = NestedSetInstanceSerializer(source='setinstance', many=True)
     class Meta:
         fields = (
+            'exercise_detail',
             'exercise',
-            'set',
-            'reps',
-            'weight',
+            'id',
             'session',
+            'set_detail'
         )
         model = ExerciseInstance
 
@@ -37,6 +47,7 @@ class NestedSessionSerializer(serializers.ModelSerializer):
             'name',
             'date',
             'exercise_instance_detail',
+            'id',
         )
         model = Session
 
@@ -84,24 +95,35 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
 
 class SessionSerializer(serializers.ModelSerializer):
-    exercise_instance_detail = NestedExerciseInstanceSerializer(source='instances', many=True)
+    exercise_instance_detail = NestedExerciseInstanceSerializer(source='instances', many=True, read_only=True)
     class Meta:
         fields = (
             'user',
             'name',
             'date',
             'exercise_instance_detail',
+            'id',
             
         )
         model = Session
 
 class ExerciseInstanceSerializer(serializers.ModelSerializer):
+    
     class Meta:
+        fields = (
+            
+            'exercise',
+            'session',
+            
+        )
+        model = ExerciseInstance
+
+class SetInstanceSerializer(serializers.ModelSerializer):
+    class Meta: 
         fields = (
             'set',
             'reps',
             'weight',
-            'exercise',
-            'session',
+            'exerciseinstance'
         )
-        model = ExerciseInstance
+        model = SetInstance

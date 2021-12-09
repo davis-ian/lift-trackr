@@ -1,4 +1,70 @@
 
+Vue.component('set-counter', {
+    data: function () {
+        return{
+            
+            count:0, 
+            reps: "",
+            weight: "",
+        }
+    },
+    props: ['workout'],
+    methods: {
+        new_set: function () {
+            this.count++
+            console.log(this.count)
+        },
+        postSet: function () {
+            console.log(this.count)
+            console.log(this.reps)
+            console.log(this.weight)
+
+            
+            
+            
+        }
+    },
+    template: `
+    <div>
+    <input type="number" v-model="reps" placeholder="Reps"/><input v-model="weight" type="number" placeholder="Weight"/>
+    </div>   
+    `
+
+})
+
+Vue.component('session', {
+    data: function () {
+        return{
+             
+
+        }
+    },
+    methods: {
+        post: function(item) {
+            console.log(item.id)
+            console.log()
+        }
+        
+    },
+    props: ['currentuser'],
+    template: `
+    <div>
+    <h3>Current Session</h3>
+    <p>Session Name: {{currentuser.session_details[0].name}}</p>
+    <p>Date: {{currentuser.session_details[0].date}}</p>
+        <div v-for="workout in currentuser.session_details[0].exercise_instance_detail">
+            <h3>{{workout.exercise_detail.name}}</h3> 
+            
+            <div v-for="set in workout.set_detail">
+                <p>Set {{set.set}}: {{set.reps}} reps @ {{set.weight}} lbs.</p>
+            </div>
+            <p><set-counter></set-counter><button @click="post(workout)">Here</button><button @click="">Button</button></p>
+    
+        </div>
+    </div>
+    `
+})
+
 Vue.component('category', {
     data: function () {
         return {
@@ -35,7 +101,8 @@ Vue.component('category', {
 Vue.component('category-exercise', {
     data: function() {
         return {
-        detail: false   
+        detail: false ,
+        
         }
 
     },
@@ -50,8 +117,30 @@ Vue.component('category-exercise', {
             }
         },
         add: function (item) {
+            
+            console.log(this.set)
             console.log(item.name)
-        }
+            console.log(item.id)
+            console.log(this.$root.reversed_sessions.id)
+        
+
+            axios({
+                method: 'post',
+                url: 'api/v1/exerciseinstances/',
+                headers: {
+                    'X-CSRFToken': this.$root.csrf_token
+                },
+                data: {
+                    
+                    "exercise": item.id,
+                    "session": this.$root.reversed_sessions.id,
+                }
+            }).then(response => {
+                this.$root.loadCurrentUser()
+            })
+            
+        },
+        
 
     },
     created: function () { 
@@ -129,10 +218,16 @@ let app = new Vue ({
     delimiters: [ '[[' , ']]' ],
     data: {
         message: "lift trackr",
+        current_session_id: "",
+        session_name: "",
+        currentUser: "",
         search_text: "",
         allExercises: [],
         allCategories: [],
         categoryExercises: [],
+        currentWorkout: [],
+        csrf_token: "",
+        
     },
     methods: {
         all_exercises: function() {
@@ -170,6 +265,34 @@ let app = new Vue ({
             })
 
         },
+        loadCurrentUser: function() {
+            axios({
+                method: 'get',
+                url: 'api/v1/currentuser/',
+            }).then(response => {
+                this.currentUser = response.data
+                
+                
+            })
+        },
+        newSession: function() {   
+            axios({ 
+                method: 'post',
+                url: '/api/v1/sessions/',
+                headers: {
+                    'X-CSRFToken': this.csrf_token
+                },
+                data: {
+                    "user": [this.currentUser.id],
+                    "name": this.session_name,
+                },
+            }).then(response => {
+                this.loadCurrentUser()
+                
+            })
+                
+            
+        },
         
         
 
@@ -177,7 +300,17 @@ let app = new Vue ({
         
         
     },
+    computed: {
+        reversed_sessions: function () {
+            if (this.currentUser) {
+            
+            x = this.currentUser.session_details.reverse()
+            return x[0]} 
+        }
+    },
+    
     created: function () {
+        this.loadCurrentUser()
         
     },
     mounted: function() {
@@ -186,5 +319,7 @@ let app = new Vue ({
 
         ex_list_div = document.getElementById("ex_list_div")
         ex_list_div.style.display = "none"
+
+        this.csrf_token = document.querySelector("input[name=csrfmiddlewaretoken]").value
     }
 })

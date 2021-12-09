@@ -26,18 +26,27 @@ class Session(models.Model):
     name = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now_add=True)
     user = models.ManyToManyField(CustomUser, related_name="sessions")
-    exercises = models.ManyToManyField(Exercise, related_name="sessions")
+    
 
     def __str__(self):
         return self.name
 
+        
 
 class ExerciseInstance(models.Model):
-    set = models.IntegerField()
-    reps = models.IntegerField()
-    weight = models.IntegerField()
     session = models.ForeignKey(Session, related_name='instances', on_delete=CASCADE)
-    exercise = models.ForeignKey(Exercise, related_name='exercises', on_delete=CASCADE)
+    exercise = models.ForeignKey(Exercise, on_delete=CASCADE)
+    
 
     def __str__(self):
         return f'{self.exercise} | {self.session}'
+
+
+class SetInstance(models.Model):
+    set = models.IntegerField()
+    reps = models.IntegerField()
+    weight = models.IntegerField()
+    exerciseinstance = models.ManyToManyField(ExerciseInstance, related_name='setinstance')
+
+    def __str__(self):
+        return f'{self.set} | {self.exerciseinstance}'

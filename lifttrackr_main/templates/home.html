@@ -9,6 +9,7 @@
         <p><a href="{% url 'logout' %}">Logout</a></p>
     </nav>
     {% if user.is_authenticated %}
+        {% csrf_token %}
         <h3>Hi {{user.username}}!</h3>
         <p>Hello, #{{user.id}}</p>
         <p>Lifting since: {{user.date_joined}}</p>
@@ -16,6 +17,29 @@
         
         <div id="start_work">
             <h2><a href="">+ New Workout</a></h2>
+            <div v-if="currentUser">
+                <session
+                :currentuser="currentUser"
+                ></session>
+                <br>
+                <hr>
+                {% comment %} <h3>Current Session</h3>
+                <p>Session name: [[reversed_sessions.name]]</p>
+                <p>Date: [[reversed_sessions.date]]</p>
+                    <div v-for="workout in currentUser.session_details[0].exercise_instance_detail">
+                        <p><button @click="addSet(workout)">Add Set</button>[[workout.exercise_detail.name]]</p> 
+                        <div v-for="set in workout.set_detail">
+                            <p>Set [[set.set]]: [[set.reps]] reps @ [[set.weight]] lbs.</p>
+                        </div>
+                        
+                
+                    </div> {% endcomment %}
+            </div>
+            
+            <input type="text" v-model="session_name" placeholder="Session Name"/>
+            <button @click="newSession()">Create</button>
+            <button @click="loadCurrentUser()">Load</button>
+            
         </div>
 
         <div id="current_work">
@@ -33,6 +57,12 @@
                 :allcategories="allCategories"
                 ></category-item>
             </template>
+
+            
+
+            
+            
+
 
         </div>
 
