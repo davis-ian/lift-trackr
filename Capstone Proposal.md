@@ -113,7 +113,7 @@ Award
 Projected date - 12/8
 -Create user system/ register / login out pages *
 -create workout database *
--Save users workout history
+-Save users workout history *
 - Users create workout
 
 ###2

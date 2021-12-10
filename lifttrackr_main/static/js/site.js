@@ -1,32 +1,53 @@
 
+
+
 Vue.component('set-counter', {
     data: function () {
         return{
             
-            count:0, 
+             
             reps: "",
             weight: "",
         }
     },
     props: ['workout'],
     methods: {
-        new_set: function () {
-            this.count++
-            console.log(this.count)
-        },
-        postSet: function () {
-            console.log(this.count)
-            console.log(this.reps)
-            console.log(this.weight)
+        new_set: function (item) {
+            count = item.set_detail.length + 1
+            
+            
 
-            
-            
-            
-        }
+            axios ({
+                method: 'post',
+                url: 'http://127.0.0.1:8000/api/v1/setinstances/',
+                headers: {
+                    'X-CSRFToken': this.$root.csrf_token
+                },
+                data: {
+                    "set": count,
+                    "reps": this.reps,
+                    "weight": this.weight,
+                    "exerciseinstance": [item.id]
+                },
+            }).then(response => {
+                this.$root.loadCurrentUser()
+                this.reps = ""
+                this.weight = ""
+            }).catch(function (error) {
+                if (error.response) {
+                    alert("Cannot enter blank set")
+                }
+            })
+        },
+        
+        
     },
     template: `
     <div>
-    <input type="number" v-model="reps" placeholder="Reps"/><input v-model="weight" type="number" placeholder="Weight"/>
+        <input type="number" v-model="reps" placeholder="Reps"/>
+        <input @keydown.enter="new_set(workout)" v-model="weight" type="number" placeholder="Weight"/>
+        <a @click="new_set(workout)"><i class="fas fa-plus"></i></a>
+    
     </div>   
     `
 
@@ -35,30 +56,57 @@ Vue.component('set-counter', {
 Vue.component('session', {
     data: function () {
         return{
+            session_length: this.$root.currentUser.session_details.length
              
 
         }
     },
     methods: {
-        post: function(item) {
+        delete_exercise_instance: function (item) {
             console.log(item.id)
-            console.log()
+
+            axios({
+                method: "delete",
+                url: 'http://127.0.0.1:8000/api/v1/exerciseinstances/'+item.id,
+                headers: {
+                    'X-CSRFToken': this.$root.csrf_token
+                },
+            }).then(response => {
+                this.$root.loadCurrentUser()
+            })
+        },
+        delete_set_instance: function (item) {
+            console.log(item.id)
+
+            axios({ 
+                method: "delete",
+                url: "http://127.0.0.1:8000/api/v1/setinstances/"+item.id,
+                headers: {
+                    'X-CSRFToken': this.$root.csrf_token
+                },
+            }).then(response => {
+                this.$root.loadCurrentUser()
+            })
         }
         
+        
     },
-    props: ['currentuser'],
+    props: ['currentuser', 'reversed_sessions'],
     template: `
     <div>
-    <h3>Current Session</h3>
-    <p>Session Name: {{currentuser.session_details[0].name}}</p>
-    <p>Date: {{currentuser.session_details[0].date}}</p>
-        <div v-for="workout in currentuser.session_details[0].exercise_instance_detail">
-            <h3>{{workout.exercise_detail.name}}</h3> 
+    <h3>Current Session: {{this.$root.reversed_sessions[0].name}}</h3>
+    
+    <p>Date: {{this.$root.reversed_sessions[0].date}}</p>
+
+        <div v-for="workout in this.$root.reversed_sessions[0].exercise_instance_detail">
+            <h3>{{workout.exercise_detail.name}} <a @click="delete_exercise_instance(workout)"><i class="fas fa-times"></i></a></h3>
             
             <div v-for="set in workout.set_detail">
-                <p>Set {{set.set}}: {{set.reps}} reps @ {{set.weight}} lbs.</p>
+                <p>Set {{set.set}}: {{set.reps}} reps @ {{set.weight}} lbs.
+                <a v-if="set.set === workout.set_detail.length" @click="delete_set_instance(set)"><i class="fas fa-times"></i></a></p>
+               
             </div>
-            <p><set-counter></set-counter><button @click="post(workout)">Here</button><button @click="">Button</button></p>
+            <set-counter :workout="workout"></set-counter>
     
         </div>
     </div>
@@ -83,18 +131,20 @@ Vue.component('category', {
         
     },
     template: `
-            <div>
-
-            <p>{{category.category}}{{category.id}}</p><button @click="detail_toggle()">Click</button>
+           
             
-               <template>                    
-                    <div v-for="exercise in category['exercise_detail']">
-                        
-                        <category-exercise v-if="show_exercises===true" :exercise=exercise></category-exercise>
-                        
-                    </div>                   
-                </template>
-            </div>
+        <div>
+        <a @click="detail_toggle()"><i class="fas fa-chevron-right"></i> {{category.category}}</a>
+        
+        <template>                    
+                <div v-for="exercise in category['exercise_detail']">
+                    
+                    <category-exercise v-if="show_exercises===true" :exercise=exercise></category-exercise>
+                    
+                </div>                   
+            </template>
+        </div>
+           
     `
 })
 
@@ -117,7 +167,7 @@ Vue.component('category-exercise', {
             }
         },
         add: function (item) {
-            
+            session = this.$root.reversed_sessions[0].id
             console.log(this.set)
             console.log(item.name)
             console.log(item.id)
@@ -126,17 +176,20 @@ Vue.component('category-exercise', {
 
             axios({
                 method: 'post',
-                url: 'api/v1/exerciseinstances/',
+                url: 'http://127.0.0.1:8000/api/v1/exerciseinstances/',
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
                 data: {
                     
                     "exercise": item.id,
-                    "session": this.$root.reversed_sessions.id,
+                    "session": session,
                 }
             }).then(response => {
                 this.$root.loadCurrentUser()
+                this.$root.show_allCategories=false
+                this.$root.show_allExercises=false
+                this.$root.show_results=false
             })
             
         },
@@ -149,8 +202,9 @@ Vue.component('category-exercise', {
     template: `
     <div>
         <div>
-            <p>{{exercise.name}}</p><button @click="detail_toggle()">click</button>
-            <button @click="add(exercise)">Add</button>
+            
+            <a @click="add(exercise)"><i class="fas fa-plus"></i>{{exercise.name}}</a>
+            
             <div v-if="detail===true">
                 <p>{{exercise.description}}</p>
             </div>
@@ -175,7 +229,7 @@ Vue.component('category-item', {
             } else {
                 this.category_detail_show = false
             }
-            console.log("here")
+            
         }
         
 
@@ -183,10 +237,13 @@ Vue.component('category-item', {
     template: `
     
     <div>
-        <div v-for="category in allcategories">
-        
-            <category :category=category></category>
+        <a @click="$root.show_allCategories=false"><i class="fas fa-times"></i></a>
+        <div>
+            <div v-for="category in allcategories">
             
+                <category :category=category></category>
+                
+            </div>
         </div>
     </div>
     
@@ -202,12 +259,41 @@ Vue.component('exercise-item', {
     },
     props: ['allexercises'],
     methods: {
+        add: function (item) {
+            session = this.$root.reversed_sessions[0].id
+            
+        
+
+            axios({
+                method: 'post',
+                url: 'http://127.0.0.1:8000/api/v1/exerciseinstances/',
+                headers: {
+                    'X-CSRFToken': this.$root.csrf_token
+                },
+                data: {
+                    
+                    "exercise": item.id,
+                    "session": session,
+                }
+            }).then(response => {
+                this.$root.loadCurrentUser()
+                this.$root.show_allCategories=false
+                this.$root.show_allExercises=false
+                this.$root.show_results=false
+            })
+            
+        },
 
     },
     template: `
+    
     <div>
-        <div v-for="exercise in allexercises">
-            <p>{{exercise.name}}</p>
+        <a @click="$root.show_allExercises=false"><i class="fas fa-times"></i></a>
+        <div>        
+            <div v-for="exercise in allexercises">
+                <a @click="add(exercise)"><i class="fas fa-plus"></i>{{exercise.name}}</a>
+                <br>
+            </div>
         </div>
     </div>`
 })
@@ -222,45 +308,44 @@ let app = new Vue ({
         session_name: "",
         currentUser: "",
         search_text: "",
+        search_results: [],
         allExercises: [],
         allCategories: [],
         categoryExercises: [],
-        currentWorkout: [],
+        show_allExercises: false,
+        show_allCategories: false,
+        show_results: false,
+        current_session: false,
+        currentWorkout: "",
         csrf_token: "",
-        
+        create_session: false,        
     },
     methods: {
         all_exercises: function() {
-            category_div.style.display = "none"
+            
 
             axios ({
                 method: 'get',
-                url: '/api/v1/exercises',
+                url: 'http://127.0.0.1:8000/api/v1/exercises',
                 params: {
                     limit: 20
                 }
             }).then(response => {
                 this.allExercises = response.data
 
-                if (ex_list_div.style.display === "none"){
-                    ex_list_div.style.display = "block"
-                } else { ex_list_div.style.display = "none"}
+                
             })
         },
         all_categories: function() {
-            ex_list_div.style.display = "none"
+            
             
             axios ({
                 method: 'get',
-                url: '/api/v1/categories',
+                url: 'http://127.0.0.1:8000/api/v1/categories',
             }).then(response => {
                 this.allCategories = response.data
 
-                if (category_div.style.display === "none"){
-                category_div.style.display = "block"
-                
-                } else { category_div.style.display = "none"}
-                console.log(this.allCategories)
+               
                 
             })
 
@@ -268,7 +353,7 @@ let app = new Vue ({
         loadCurrentUser: function() {
             axios({
                 method: 'get',
-                url: 'api/v1/currentuser/',
+                url: 'http://127.0.0.1:8000/api/v1/currentuser/',
             }).then(response => {
                 this.currentUser = response.data
                 
@@ -278,7 +363,7 @@ let app = new Vue ({
         newSession: function() {   
             axios({ 
                 method: 'post',
-                url: '/api/v1/sessions/',
+                url: 'http://127.0.0.1:8000/api/v1/sessions/',
                 headers: {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -288,11 +373,119 @@ let app = new Vue ({
                 },
             }).then(response => {
                 this.loadCurrentUser()
-                
+                this.current_session_id = this.reversed_sessions.id
+                this.getSession()
+                this.current_session=true
             })
                 
             
         },
+        getSession: function () {
+            axios({
+                method: 'get',
+                url: 'http://127.0.0.1:8000/api/v1/sessions/' + this.current_session_id,
+                headers: {
+                    'X-CSRFToken': this.csrf_token
+                },
+            }).then(response => {
+                this.currentWorkout = response.data
+            })
+        },
+        toggle_exercises: function () {
+            this.show_allCategories = false
+            if (this.show_allExercises===true) {
+                this.show_allExercises = false
+            } else {
+                this.show_allExercises = true
+            }
+        },
+        toggle_categories: function () {
+            this.show_allExercises = false
+            if (this.show_allCategories===true) {
+                this.show_allCategories = false
+            } else {
+                this.show_allCategories = true
+            }
+        },
+        toggle_current_session: function () {
+            if (this.current_session===true) {
+                this.current_session = false
+            } else {
+                this.current_session = true
+            }
+        },
+        finish_session: function () {
+            this.current_session=false
+            this.create_session=false
+            this.show_allCategories=false
+            this.show_allExercises=false
+            this.session_name=""
+        },
+        cancel_workout: function () {
+            x = this.reversed_sessions[0].id
+            
+            axios ({
+                method: 'delete',
+                url: 'http://127.0.0.1:8000/api/v1/sessions/'+ x,
+                headers: {
+                    'X-CSRFToken': this.csrf_token
+                },
+            }).then(response => {
+                this.loadCurrentUser()
+                this.current_session = false
+                this.session_name=""
+                this.create_session = false
+            })
+        },
+        delete_workout: function (item) {
+            
+            axios ({
+                method: 'delete',
+                url: 'http://127.0.0.1:8000/api/v1/sessions/'+item.id,
+                headers: {
+                    'X-CSRFToken': this.csrf_token
+                },
+            }).then(response => {
+                this.loadCurrentUser()
+            })
+        },
+        search_exercise: function () {
+            axios ({
+                method: 'get',
+                url: 'http://127.0.0.1:8000/api/v1/exercises',
+                headers: {
+                    'X-CSRFToken': this.csrf_token
+                },
+                params: {
+                    search: this.search_text,
+                }
+            }).then (response => {
+                this.search_results = response.data
+                this.show_results = true
+            })
+        },
+        add_result: function (item) {
+            session = this.reversed_sessions[0].id
+            axios({
+                method: 'post',
+                url: 'http://127.0.0.1:8000/api/v1/exerciseinstances/',
+                headers: {
+                    'X-CSRFToken': this.csrf_token
+                },
+                data: {
+                    "exercise": item.id,
+                    "session": session
+                },
+            }).then(response => {
+                this.loadCurrentUser()
+                this.show_results=false
+                this.search_text = ""
+            })
+        },
+        close_search: function () {
+            this.show_results=false
+            this.search_text=""
+        }
         
         
 
@@ -304,21 +497,20 @@ let app = new Vue ({
         reversed_sessions: function () {
             if (this.currentUser) {
             
-            x = this.currentUser.session_details.reverse()
-            return x[0]} 
+            x = this.currentUser.session_details.slice().reverse()
+            return x} 
         }
     },
     
     created: function () {
         this.loadCurrentUser()
+        this.getSession()
+        this.all_categories()
+        this.all_exercises()
         
     },
     mounted: function() {
-        category_div = document.getElementById("category_div")
-        category_div.style.display = "none"
-
-        ex_list_div = document.getElementById("ex_list_div")
-        ex_list_div.style.display = "none"
+        
 
         this.csrf_token = document.querySelector("input[name=csrfmiddlewaretoken]").value
     }

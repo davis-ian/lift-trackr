@@ -11,7 +11,7 @@ class NestedSetInstanceSerializer(serializers.ModelSerializer):
             'set',
             'reps',
             'weight',
-            
+            'id',
         )
         model = SetInstance
 

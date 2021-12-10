@@ -3,80 +3,111 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    
-    <nav>
-        <h1>Welcome to [[message]]!</h1>
-        <p><a href="{% url 'logout' %}">Logout</a></p>
-    </nav>
+
+   
     {% if user.is_authenticated %}
-        {% csrf_token %}
-        <h3>Hi {{user.username}}!</h3>
-        <p>Hello, #{{user.id}}</p>
-        <p>Lifting since: {{user.date_joined}}</p>
-    
-        
-        <div id="start_work">
-            <h2><a href="">+ New Workout</a></h2>
-            <div v-if="currentUser">
-                <session
-                :currentuser="currentUser"
-                ></session>
-                <br>
-                <hr>
-                {% comment %} <h3>Current Session</h3>
-                <p>Session name: [[reversed_sessions.name]]</p>
-                <p>Date: [[reversed_sessions.date]]</p>
-                    <div v-for="workout in currentUser.session_details[0].exercise_instance_detail">
-                        <p><button @click="addSet(workout)">Add Set</button>[[workout.exercise_detail.name]]</p> 
-                        <div v-for="set in workout.set_detail">
-                            <p>Set [[set.set]]: [[set.reps]] reps @ [[set.weight]] lbs.</p>
-                        </div>
-                        
+
+        <div class="home_logged_in">
+            <nav>
+                <h1>[[message]]</h1>
+                <p><a href="{% url 'logout' %}">Logout</a></p>
+            </nav>
+            
+            <div class="home_main">
+                {% csrf_token %}
+                <h2><a href="http://127.0.0.1:8000/users/history">History</a></h2>
+                <h1>Hi {{user.username}}!</h1>
                 
-                    </div> {% endcomment %}
+                <p>Lifting since: {{user.date_joined}}</p>
+            
+                
+                <div id="start_work">
+                    <div v-if="create_session===false">
+                        <h2><a @click="create_session=true">New Workout</a></h2>
+                    </div>
+                    <div v-if="current_session===true">
+                        <session 
+                        :currentuser="currentUser"
+                        ></session>
+                        
+                            <br>
+                            <hr>
+                            <button @click="toggle_categories()">Categories</button>
+                            <button @click="toggle_exercises()">List</button>
+                            <button @click="finish_session()">Finish Workout</button>
+                            <button @click="cancel_workout()">Cancel</button><br>
+                            <input id="searchinput" type="text" @keydown.enter="search_exercise()" v-model="search_text" placeholder="Search"/>
+                            <button @click="search_exercise()">Search</button>
+                            <br>
+                            <hr>
+                            
+                        
+                    </div>
+
+                    
+                    <div v-if="create_session===true">
+                        <div v-if="current_session===false">
+                            <input type="text" v-model="session_name" id="session_name" @keydown.enter="newSession()" placeholder="Session Name"/>
+                            <button @click="newSession()">Create</button>
+                            <button @click="create_session=false">Cancel</button>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+
+                <div id="current_work">
+                    
+
+                    <template v-if="show_allExercises===true">                        
+                        <exercise-item id="ex_list_div"
+                        :allexercises="allExercises"
+                        ></exercise-item>                        
+                    </template>
+
+                    <template v-if="show_allCategories===true">
+                        <category-item id="category_div"
+                        :allcategories="allCategories"
+                        ></category-item>
+                    </template>
+
+                    
+                    <template v-if="show_results===true">
+
+                        <div id="search_div">
+                            <a @click="close_search"><i class="fas fa-times"></i></a>
+                            <div>
+                                <div v-for="result in search_results">
+                                    <p><a @click="add_result(result)"><i class="fas fa-plus"></i> [[result.name]]</p>
+                                </div>
+                            <div>
+                        </div>
+                    </template>
+                    
+                    
+
+
+                </div>
             </div>
-            
-            <input type="text" v-model="session_name" placeholder="Session Name"/>
-            <button @click="newSession()">Create</button>
-            <button @click="loadCurrentUser()">Load</button>
-            
         </div>
 
-        <div id="current_work">
-            <button @click="all_categories()">Categories</button>
-            <button @click="all_exercises()">List</button>
-
-            <template>
-                <exercise-item id="ex_list_div"
-                :allexercises="allExercises"
-                ></exercise-item>
-            </template>
-
-            <template>
-                <category-item id="category_div"
-                :allcategories="allCategories"
-                ></category-item>
-            </template>
-
-            
-
             
             
 
 
+            
+        {% else %}
+        <div class="home_logged_out_container">
+            <div class="home_logged_out">
+                <p>You are not logged in</p>
+                <a href="{% url 'login' %}">Login</a> 
+                <a href="{% url 'signup' %}">Sign Up</a> 
+                <a href="{% url 'reset_password' %}">Forgot Password?</a>
+            </div>
         </div>
-
+        {% endif %}
         
-        
 
-
-        
-    {% else %}
-        <p>You are not logged in</p>
-        <a href="{% url 'login' %}">Login</a> |
-        <a href="{% url 'signup' %}">Sign Up</a> |
-        <a href="{% url 'reset_password' %}">Forgot Password?</a>
-    {% endif %}
     {% endblock %}
 
 

@@ -18,7 +18,7 @@ class ExerciseViewSet(viewsets.ModelViewSet):
     queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name', 'category']
+    search_fields = ['name']
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
