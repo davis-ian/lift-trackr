@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% csrf_token %}
+<h2>Template Builder</h2>
+
+
+
+
+<input type="text" v-model="search_text" placeholder="search"/>
+<button @click="search_exercise()">Search</button>
+<button @click="toggle_exercises()">List</button>
+<button @click="toggle_categories()">Categories</button>
+<button>Cancel</button>
+
+<div v-if="template_exercise_list.length>0">
+    <div v-for="item in template_exercise_list">
+        <h3>[[item.name]]</h3>
+        
+    </div>
+    <input type="text" v-model="new_template_name" placeholder="Template Name">
+    <button @click="new_template">Create</button><br>
+    <hr>
+</div>
+
+<div v-if="show_results===true">
+    <div v-for="exercise in search_results">
+        <p>[[exercise.name]]<button @click="add_to_temp(exercise)">Add</button></p>
+    </div>
+</div>
+
+<div v-if="show_allExercises===true">
+    <div v-for="exercise in allExercises">
+        <p>[[exercise.name]]<button @click="add_to_temp(exercise)">Add</button></p>
+    </div>
+</div>
+
+<div v-if="show_allCategories===true">
+    
+    <template-category-item :allcategories="allCategories"></template-category-item>
+    
+</div>
+
+{% endblock %}

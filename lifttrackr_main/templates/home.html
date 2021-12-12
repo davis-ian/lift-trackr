@@ -15,15 +15,18 @@
             
             <div class="home_main">
                 {% csrf_token %}
-                <h2><a href="http://127.0.0.1:8000/users/history">History</a></h2>
+                <h2 v-if="current_session===false"><a href="http://127.0.0.1:8000/users/history">History</a></h2>
                 <h1>Hi {{user.username}}!</h1>
-                
-                <p>Lifting since: {{user.date_joined}}</p>
             
                 
                 <div id="start_work">
-                    <div v-if="create_session===false">
-                        <h2><a @click="create_session=true">New Workout</a></h2>
+                    <div v-if="current_session===false">
+                        <h2><a @click="resume_workout()">Resume Workout</a></h2>
+                        <h2><a @click="toggle_new_workout()">New Workout</a></h2>
+                        <h2><a @click="toggle_temps()">My Templates</a></h2>
+                        <h2><a @click="start_template()" >New Template</a></h2>
+                        <h2><a href="http://127.0.0.1:8000/users/profile">Profile</a></h2>
+                        <hr>
                     </div>
                     <div v-if="current_session===true">
                         <session 
@@ -34,8 +37,10 @@
                             <hr>
                             <button @click="toggle_categories()">Categories</button>
                             <button @click="toggle_exercises()">List</button>
+                            <button @click="toggle_temps()">Templates</button>
                             <button @click="finish_session()">Finish Workout</button>
                             <button @click="cancel_workout()">Cancel</button><br>
+                            <br>
                             <input id="searchinput" type="text" @keydown.enter="search_exercise()" v-model="search_text" placeholder="Search"/>
                             <button @click="search_exercise()">Search</button>
                             <br>
@@ -57,8 +62,23 @@
                 </div>
 
                 <div id="current_work">
-                    
 
+                    <div id="template_creator">
+                        <div v-if="template_start===true">
+                            <button @click="toggle_exercises()">List</button>
+                            <button @click="toggle_categories()">Categories</button>
+                            <input type="text" v-model="search_text" @keydown.enter="search_exercise()" placeholder="Search">
+                            <button @click="search_exercise()">Search</button>
+                            <br><br>
+                            <input type="text" v-model="new_template_name" @keydown.enter="save_template()" placeholder="Template Name">
+                            <button @click="save_template()">Save Template</button>
+                            <br>
+                            <h3 v-for="item in template_exercise_list">[[item.name]]
+                                <button @click="remove_from_template(item)">Del</button>
+                            </h3>
+                        </div>
+                    </div>
+                    <br>
                     <template v-if="show_allExercises===true">                        
                         <exercise-item id="ex_list_div"
                         :allexercises="allExercises"
@@ -70,24 +90,39 @@
                         :allcategories="allCategories"
                         ></category-item>
                     </template>
-
                     
                     <template v-if="show_results===true">
-
                         <div id="search_div">
                             <a @click="close_search"><i class="fas fa-times"></i></a>
                             <div>
                                 <div v-for="result in search_results">
-                                    <p><a @click="add_result(result)"><i class="fas fa-plus"></i> [[result.name]]</p>
+                                    <div v-if="template_start===false">
+                                        <p><a @click="add_result(result)"><i class="fas fa-plus"></i> [[result.name]]</p>
+                                    </div>
+                                    <div v-if="template_start===true">
+                                        <p><a @click="add_to_temp(result)"><i class="fas fa-plus"></i> [[result.name]]</p>
+                                    </div>
                                 </div>
                             <div>
                         </div>
                     </template>
-                    
-                    
-
-
                 </div>
+
+                <div id="my_temps">
+                    <div v-if="show_my_temps===true">
+                        <div v-for="temp in reversed_templates">
+                            <template-editor :temp="temp"></template-editor>
+                            
+                            
+                            
+                            <button v-if="current_session===true" @click="exercises_from_temp(temp)">Start Session</button>
+                                          
+                        </div>
+                    </div> 
+                </div>
+
+                
+                
             </div>
         </div>
 

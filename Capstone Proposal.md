@@ -114,14 +114,14 @@ Projected date - 12/8
 -Create user system/ register / login out pages *
 -create workout database *
 -Save users workout history *
-- Users create workout
+- Users create workout *
 
 ###2
 Prjected date - 12/13
 -Establish many to many rel in users system
 -Allow users to add friends 
 -Create profile page
--Allow users to save reccuring workout 
+-Allow users to save reccuring workout *
 -Give users streak for submiting workouts 5 days per week
 
 

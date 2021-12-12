@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.deletion import CASCADE
+from django.db.models.fields.related import ManyToManyField
 from users.models import CustomUser
 
 
@@ -23,7 +24,6 @@ class Category(models.Model):
 
     
 class Session(models.Model):
-    name = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now_add=True)
     user = models.ManyToManyField(CustomUser, related_name="sessions")
     
@@ -50,3 +50,11 @@ class SetInstance(models.Model):
 
     def __str__(self):
         return f'{self.set} | {self.exerciseinstance}'
+
+class WorkoutTemplate(models.Model):
+    user = ManyToManyField(CustomUser, related_name="templates")
+    name = models.CharField(max_length=200)
+    exercises = models.ManyToManyField(Exercise, related_name="temp_exercises")
+
+    def __str__(self):
+        return f'{self.name} | {self.user}'

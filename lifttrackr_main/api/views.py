@@ -2,10 +2,11 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework import filters
-from exercises.models import Exercise, Category, Session, ExerciseInstance, SetInstance
+from exercises.models import Exercise, Category, Session, ExerciseInstance, SetInstance, WorkoutTemplate
 
 from users.models import CustomUser
-from .serializers import CategorySerializer, ExerciseInstanceSerializer, SessionSerializer, UserSerializer, ExerciseSerializer, SetInstanceSerializer
+from .serializers import CategorySerializer, ExerciseInstanceSerializer, SessionSerializer, UserSerializer, ExerciseSerializer, SetInstanceSerializer, WorkoutTemplateSerializer
+
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -44,3 +45,7 @@ class CurrentUserView(generics.RetrieveUpdateAPIView):
 class SetInstanceViewSet(viewsets.ModelViewSet):
     queryset = SetInstance.objects.all()
     serializer_class = SetInstanceSerializer
+
+class WorkoutTemplateViewSet(viewsets.ModelViewSet):
+    queryset = WorkoutTemplate.objects.all()
+    serializer_class = WorkoutTemplateSerializer

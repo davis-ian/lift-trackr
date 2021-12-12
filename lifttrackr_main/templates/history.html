@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}History{% endblock %}
 
 {% block content %}
 {% if user.is_authenticated %}
@@ -8,13 +8,14 @@
 <div class="history_container">
 
     <div class="history">
-        <h2><a href="http://127.0.0.1:8000">Home</a></h2>
-        <h1>History</h1>
+        <div id="history_header">
+            <h2><a href="http://127.0.0.1:8000">Home</a></h2>
+            <h1>History</h1>
+        </div>
 
         <div v-for="session in reversed_sessions">
             <div id="my_sessions">
-                <h2>[[session.name]]</h2>
-                <p>[[session.date]]</p>
+                <h2>[[session.date]]</h2>
                 <div v-for="exercise in session.exercise_instance_detail">
                     <h4>[[exercise.exercise_detail.name]]</h4>
                     <div v-for="set in exercise.set_detail">
@@ -22,6 +23,9 @@
                     </div>
                 </div>
                 <h3><a @click="delete_workout(session)"><i class="fas fa-trash-alt"></i></a></h3>
+                
+                <save-template :session="session"></save-template>
+               
             </div>
             
         </div>

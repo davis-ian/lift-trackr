@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Templates{% endblock %}
+{% block content %}
+    {% csrf_token %}
+    <div>
+        <div v-for="temp in currentUser.workout_templates">
+            <h2>[[temp.name]]</h2>
+            <div v-for="workout in temp.temp_details">
+                <h4>[[workout.name]]</h4>
+            </div>
+            <button @click="start_from_temp(temp)">Start Workout</button>
+        </div>
+    </div>   
+
+
+{% endblock %}

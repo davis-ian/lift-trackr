@@ -2,18 +2,8 @@
 
 
 from users.models import CustomUser
-from exercises.models import Exercise, Category, Session, ExerciseInstance, SetInstance
+from exercises.models import Exercise, Category, Session, ExerciseInstance, SetInstance, WorkoutTemplate
 from rest_framework import serializers
-
-class NestedSetInstanceSerializer(serializers.ModelSerializer):
-    class Meta: 
-        fields = (
-            'set',
-            'reps',
-            'weight',
-            'id',
-        )
-        model = SetInstance
 
 class NestedExerciseSerializer(serializers.ModelSerializer):
     class Meta: 
@@ -25,6 +15,29 @@ class NestedExerciseSerializer(serializers.ModelSerializer):
             
         )
         model = Exercise
+
+class NestedWorkoutTemplateSerializer(serializers.ModelSerializer):
+    temp_details = NestedExerciseSerializer(source='exercises', many=True)
+    class Meta:
+        fields = (
+            'user',
+            'name',
+            # 'exercises',
+            'temp_details',
+            'id',
+        )
+        model = WorkoutTemplate
+
+class NestedSetInstanceSerializer(serializers.ModelSerializer):
+    class Meta: 
+        fields = (
+            'set',
+            'reps',
+            'weight',
+            'id',
+        )
+        model = SetInstance
+
 
 class NestedExerciseInstanceSerializer(serializers.ModelSerializer):
     exercise_detail = NestedExerciseSerializer(source='exercise')
@@ -44,7 +57,6 @@ class NestedSessionSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'user',
-            'name',
             'date',
             'exercise_instance_detail',
             'id',
@@ -62,13 +74,15 @@ class NestedCategorySerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     session_details = NestedSessionSerializer(source='sessions', many=True)
+    workout_templates = NestedWorkoutTemplateSerializer(source='templates', many=True)
     class Meta :
         fields = (
             'id',
             'username',
             'date_joined',
             'streak',
-            'session_details'
+            'workout_templates',
+            'session_details',
         )
         model = CustomUser
 
@@ -99,7 +113,6 @@ class SessionSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'user',
-            'name',
             'date',
             'exercise_instance_detail',
             'id',
@@ -127,3 +140,13 @@ class SetInstanceSerializer(serializers.ModelSerializer):
             'exerciseinstance'
         )
         model = SetInstance
+
+class WorkoutTemplateSerializer(serializers.ModelSerializer):
+    class Meta: 
+        fields = (
+            'user',
+            'name',
+            'exercises',
+            'id',
+        )
+        model = WorkoutTemplate
