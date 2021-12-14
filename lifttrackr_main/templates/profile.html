@@ -4,20 +4,45 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-{% csrf_token%}
+{% csrf_token %}
 <div class="profile">
 
 <h3><a href="http://127.0.0.1:8000/">Home</a></h3>
 
 <h2>{{user.username}}'s Profile</h2>
 <p>Lifting since: {{user.date_joined}}</p>
+<p>Current Streak: {{user.streak}}</p>
+<button @click="test()">Go</button>
 
 <input type="text" @keydown.enter="search_users()" v-model="search_text" placeholder="Search"/>
 <button @click="search_users()">Search Users</button>
 
     <div v-for="user in user_results">
-        <p>[[user.username]]</p>
+        <p>[[user.username]]</p>  
+
+        <div v-if="!currentUser.friends_list.map(friend => friend.id).includes(user.id)">
+            <a :href="`send_friend_request/${user.id}/`">Send Friend Request</a>
+        </div>
+        <hr>
     </div>
+
+    <div>
+        <h3>Friend Requests:</h3>
+        <div v-for="user in currentUser.request_in_details">
+            <p>[[user.username]]<a :href="`accept_friend_request/${user.id}/`">Accept</a></p>
+    </div>
+
+    <div>
+        <h3>Friends:</h3>
+        <div v-for="user in currentUser.friends_list">
+            <p>[[user.username]]</p>
+    </div>
+
+    
+
+   
+
+    
 </div>
 
 

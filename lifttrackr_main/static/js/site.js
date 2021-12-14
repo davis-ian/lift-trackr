@@ -628,6 +628,7 @@ let app = new Vue ({
             this.show_allCategories=false
             this.show_allExercises=false
             this.session_name=""
+            
         },
         cancel_workout: function () {
             x = this.reversed_sessions[0].id            
@@ -844,6 +845,16 @@ let app = new Vue ({
                 this.user_results = response.data
                 console.log(this.user_results)
             })
+        },
+        current_user_friend_requests: function () {
+            axios ({
+                method: 'get',
+                url: 'http://127.0.0.1:8000/api/v1/friendrequests/'
+            })
+        },
+        test: function () {
+            
+            
         }
         
         
@@ -861,6 +872,7 @@ let app = new Vue ({
                 y = this.currentUser.workout_templates.slice().reverse()
                 return y}
         },
+       
 
     },
     

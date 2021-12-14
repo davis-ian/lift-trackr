@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import SignUpView
+from .views import SignUpView, accept_friend_request, send_friend_request
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 
@@ -12,5 +12,6 @@ urlpatterns = [
     path('history', TemplateView.as_view(template_name='history.html'), name='history' ),
     path('workout_templates', TemplateView.as_view(template_name='workout_templates.html'), name='workout_templates'),
     path('profile', TemplateView.as_view(template_name='profile.html'), name='profile'),
-    
+    path('send_friend_request/<int:userID>/', send_friend_request, name='send friend request'),
+    path('accept_friend_request/<int:requestID>/', accept_friend_request, name='accept friend request'),
 ]
