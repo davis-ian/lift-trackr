@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     friends = models.ManyToManyField("CustomUser", blank=True)
     request_out = models. ManyToManyField("CustomUser", related_name="request_in", blank=True)
     competition_points = models.IntegerField(default=0)
+    
 
     def __str__(self):
         return self.username

@@ -35,3 +35,4 @@ def accept_friend_request (request, requestID):
     to_user.save()
     from_user.save()
     return HttpResponseRedirect(reverse_lazy('profile'))
+

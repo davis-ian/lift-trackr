@@ -14,4 +14,6 @@ urlpatterns = [
     path('profile', TemplateView.as_view(template_name='profile.html'), name='profile'),
     path('send_friend_request/<int:userID>/', send_friend_request, name='send friend request'),
     path('accept_friend_request/<int:requestID>/', accept_friend_request, name='accept friend request'),
+    path('competitions/', TemplateView.as_view(template_name='competitions.html'), name='competitions'),
+    
 ]

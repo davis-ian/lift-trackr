@@ -1,7 +1,7 @@
 from django.urls import path
 
 
-from .views import CompetitionViewSet, ExerciseInstanceViewSet, WorkoutTemplateViewSet, UserViewSet, ExerciseViewSet, CategoryViewSet, SessionViewSet, ExerciseInstanceViewSet, SetInstanceViewSet, CurrentUserView
+from .views import CompetitionViewSet, ExerciseInstanceViewSet, WorkoutTemplateViewSet, UserViewSet, ExerciseViewSet, CategoryViewSet, SessionViewSet, ExerciseInstanceViewSet, SetInstanceViewSet, CurrentUserView, CompExerciseViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -13,6 +13,7 @@ router.register('exerciseinstances', ExerciseInstanceViewSet, basename='exercise
 router.register('setinstances', SetInstanceViewSet, basename='setinstance')
 router.register('templates', WorkoutTemplateViewSet, basename='templates')
 router.register('competitions', CompetitionViewSet, basename='competitions')
+router.register('compworkouts', CompExerciseViewSet, basename='compworkouts')
 # router.register('friendrequests', FriendRequestViewSet, basename="friendrequests")
 
 urlpatterns = router.urls + [

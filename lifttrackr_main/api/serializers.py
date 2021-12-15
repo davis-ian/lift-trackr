@@ -3,14 +3,16 @@
 
 
 from users.models import CustomUser
-from exercises.models import Exercise, Category, Session, ExerciseInstance, SetInstance, WorkoutTemplate, Competition
+from exercises.models import Exercise, Category, Session, ExerciseInstance, SetInstance, WorkoutTemplate, Competition, CompExercise
 from rest_framework import serializers
+
 
 class NestedUserSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'username',
-            'id'
+            'id',
+            'competition_points',
         )
         model = CustomUser
 
@@ -29,9 +31,19 @@ class NestedExerciseSerializer(serializers.ModelSerializer):
             'uuid',
             'name',
             'description',
-            
         )
         model = Exercise
+
+class NestedCompExerciseSerializer(serializers.ModelSerializer):
+    exercise_detail = NestedExerciseSerializer(source='exercise')
+    class Meta: 
+        fields = (
+            'exercise',
+            'exercise_detail',
+            'exercise_points',
+            'competition',
+        )
+        model = CompExercise
 
 class NestedWorkoutTemplateSerializer(serializers.ModelSerializer):
     temp_details = NestedExerciseSerializer(source='exercises', many=True)
@@ -66,15 +78,16 @@ class NestedExerciseInstanceSerializer(serializers.ModelSerializer):
             'id',
             'session',
             'set_detail',
-            'points'
         )
         model = ExerciseInstance
 
 class NestedSessionSerializer(serializers.ModelSerializer):
     exercise_instance_detail = NestedExerciseInstanceSerializer(source='instances', many=True)
+    user_detail = NestedUserSerializer(source='user', many=True)
     class Meta:
         fields = (
             'user',
+            'user_detail',
             'date',
             'exercise_instance_detail',
             'id',
@@ -101,6 +114,7 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'date_joined',
+            'competition_points',
             'request_out_details',
             'request_in_details',
             'friends_list',
@@ -141,6 +155,7 @@ class SessionSerializer(serializers.ModelSerializer):
             'date',
             'exercise_instance_detail',
             'id',
+            'competition',
         )
         model = Session
 
@@ -151,7 +166,6 @@ class ExerciseInstanceSerializer(serializers.ModelSerializer):
             
             'exercise',
             'session',
-            'points',
             
         )
         model = ExerciseInstance
@@ -178,23 +192,35 @@ class WorkoutTemplateSerializer(serializers.ModelSerializer):
 
 class CompetitionSerializer(serializers.ModelSerializer):
     session_details = NestedSessionSerializer(source='sessions', many=True)
-    exercise_details = NestedExerciseSerializer(source='exercises', many=True)
     participant_details = NestedUserSerializer(source='participants', many=True)
+    comp_exercise_details = NestedCompExerciseSerializer(source='compexercises', many=True)
+    
     class Meta:
         fields = (
+            'title',
             'creator',
-            'exercises',
-            'exercise_details',
             'participants',
             'participant_details',
+            'comp_exercise_details',
             'start_date',
             'stop_date',
             'notes',
             'sessions',
             'session_details',
+            'id',
         )
         model = Competition
 
+class CompExerciseSerializer(serializers.ModelSerializer):
+    exercise_detail = NestedExerciseSerializer(source='exercise')
+    class Meta: 
+        fields = (
+            'exercise',
+            'exercise_points',
+            'competition',
+            'exercise_detail'
+        )
+        model = CompExercise
 # class FriendRequestSerializer(serializers.ModelSerializer):
 #     class Meta: 
 #         fields = (

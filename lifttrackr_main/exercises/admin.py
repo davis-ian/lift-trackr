@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Competition, Exercise, Category, ExerciseInstance, Session, SetInstance, WorkoutTemplate
+from .models import Competition, Exercise, Category, ExerciseInstance, Session, SetInstance, WorkoutTemplate, CompExercise
 
 # Register your models here.
 
@@ -10,3 +10,4 @@ admin.site.register(ExerciseInstance)
 admin.site.register(SetInstance)
 admin.site.register(WorkoutTemplate)
 admin.site.register(Competition)
+admin.site.register(CompExercise)
