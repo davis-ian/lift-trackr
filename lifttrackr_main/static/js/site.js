@@ -227,6 +227,9 @@ Vue.component('set-counter', {
             }).then(response => {
                 this.$root.loadCurrentUser()
                 this.$root.load_competitions()
+
+                let path = window.location.pathname.split('/')
+                this.$root.comp_detail_load(path[path.length-2])
                 this.reps = ""
                 this.weight = ""
             }).catch(function (error) {
@@ -541,11 +544,15 @@ let app = new Vue ({
         build_template: false,
         edit_temp: false,
         comp_session: false,
+        competition_builder: false,
         currentWorkout: "",
         csrf_token: "",
         create_session: false, 
         template_exercise_list: [],
-        current_user_point_adjust: 0       
+        current_user_point_adjust: 0,     
+        current_competition: "", 
+        start_date: "",
+        stop_date: "",
     },
     methods: {
         all_exercises: function() {
@@ -659,6 +666,9 @@ let app = new Vue ({
                 this.create_session = false
                 this.show_my_temps = false
                 this.comp_session = false
+
+                let path = window.location.pathname.split('/')
+                this.comp_detail_load(path[path.length-2])
             })
         },
         delete_workout: function (item) {            
@@ -670,6 +680,9 @@ let app = new Vue ({
                 },
             }).then(response => {
                 this.loadCurrentUser()
+
+                let path = window.location.pathname.split('/')
+                this.comp_detail_load(path[path.length-2])
             })
         },
         search_exercise: function () {
@@ -941,6 +954,9 @@ let app = new Vue ({
                     this.loadCurrentUser()
                     this.load_competitions()
                     this.comp_session = false
+
+                    let path = window.location.pathname.split('/')
+                    this.comp_detail_load(path[path.length-2])
                 })
             }    
             
@@ -963,6 +979,9 @@ let app = new Vue ({
                 this.loadCurrentUser()
                 this.load_competitions()
                 this.comp_session=true
+
+                let path = window.location.pathname.split('/')
+                this.comp_detail_load(path[path.length-2])
             })
 
         },
@@ -984,9 +1003,54 @@ let app = new Vue ({
                 this.loadCurrentUser()
                 this.load_competitions()
                 this.comp_session = true
-            })    
-        }
 
+                let path = window.location.pathname.split('/')
+                this.comp_detail_load(path[path.length-2])
+            })    
+        },
+        comp_detail_load: function(item) {
+            axios ({ 
+                method: 'get',
+                url: 'http://127.0.0.1:8000/api/v1/competitions/'+item+'/',
+                headers : {
+                    'X-CSRFToken': this.csrf_token
+                },
+            }).then(response => {
+                
+                this.current_competition = response.data
+            })
+        },
+        new_competition_time: function() {
+            this.competition_builder=true
+        },
+        start_competition: function() {
+            axios({
+                method: 'post',
+                url: 'http://127.0.0.1:8000/api/v1/competitions/',
+                headers : {
+                    'X-CSRFToken': this.csrf_token
+                },
+                data: {
+                    "title": this.session_name,
+                    "creator": this.currentUser.id,
+                    "participants": [this.currentUser.id],
+                    "start date": this.date_format(this.start_date),
+                    "stop_date": this.date_format(this.stop_date),
+                }
+            }).then(response => {
+                this.load_competitions()
+            })
+        },
+        date_format: function(item) {
+            item = item.split('-')
+            item.reverse()
+            item = item.join('/')
+
+            console.log(item)
+            return `${item[1]}/${item[2]}/${item[0]}`
+            
+        }
+        
         
     
     },
@@ -1001,6 +1065,7 @@ let app = new Vue ({
                 y = this.currentUser.workout_templates.slice().reverse()
                 return y}
         },
+        
        
 
     },
@@ -1015,5 +1080,8 @@ let app = new Vue ({
     },
     mounted: function() {
         this.csrf_token = document.querySelector("input[name=csrfmiddlewaretoken]").value
+        
+        let path = window.location.pathname.split('/')
+        this.comp_detail_load(path[path.length-2])
     }
 })

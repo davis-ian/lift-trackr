@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Competition Detail{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+{% csrf_token %}
+
+ <div>
+     <h2><a href="http://127.0.0.1:8000/">Home</a></h2>
+     <h2><a href="http://127.0.0.1:8000/users/competitions/">Competitions</a></h2>
+
+
+    <button @click="new_comp_session(current_competition)">New Session</button>
+        <div v-if="comp_session===true">
+            <br>
+            <button @click="cancel_workout()">Cancel</button>
+            <div v-for="exercise in current_competition.comp_exercise_details">
+                <p><button @click="new_comp_exercise_instance(exercise)">Start</button> [[exercise.exercise_detail.name]]</p>
+            </div>
+            <h3>Current Session:</h3>
+            <div v-for="inst in reversed_sessions[0].exercise_instance_detail">
+                <h4>[[inst.exercise_detail.name]]</h4>
+                <div v-for="set in inst.set_detail">
+                    <p>Set [[set.set]]: [[set.reps]] reps @ [[set.weight]] lbs. </p>
+                </div>
+                <set-counter :inst='inst'></set-counter>
+            </div>
+            <button v-if="reversed_sessions[0].exercise_instance_detail.length>0" @click="score_upload(current_competition)">Finish</button>
+        </div>
+
+
+    <h2>[[current_competition.title]]</h2>
+    <p>Start: [[current_competition.start_date]]</p>
+    <p>Stop: [[current_competition.stop_date]]</p>
+    <p>Notes: [[current_competition.notes]]</p>
+    <h3>Scoring:</h3>
+    <div v-for="exercise in current_competition.comp_exercise_details">
+        <h4>[[exercise.exercise_detail.name]]: [[exercise.exercise_points]] pts.</h4>
+    </div>
+    <h3>Leaderboard:</h3>
+    <div v-for="competitor in current_competition.participant_details">
+        <p>[[competitor.username]] : [[competitor.competition_points]] pts.</p>
+    </div>
+    <hr>
+    <h3>Session History:</h3>
+    <hr>
+    <div v-for="session in current_competition.session_details">
+        <h4>[[session.user_detail[0].username]]</h4>
+        <div v-for="exercise in session.exercise_instance_detail">
+            <h4>[[exercise.exercise_detail.name]]</h4>
+            <div v-for="set in exercise.set_detail">
+                <p>Set [[set.set]]: [[set.reps]] reps @ [[set.weight]] lbs.</p>
+            </div>
+        </div>
+        <div v-if="session.user_detail[0].username === currentUser.username">
+            <button @click="delete_workout(session)" >Del</button>
+        </div>
+        <hr>
+    </div>
+    
+    
+    
+
+    
+</div> 
+
+{% else %}
+<h1>It doesn't look like you are currently logged in</h1>
+{% endif %}
+{% endblock %}

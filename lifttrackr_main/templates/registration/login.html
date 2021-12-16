@@ -9,8 +9,8 @@
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <a href="{% url 'signup' %}">Sign Up</a> |
-            <a href="{% url 'reset_password' %}">Forgot Password?</a>
+            <a href="{% url 'users:signup' %}">Sign Up</a> |
+            <a href="{% url 'users:reset_password' %}">Forgot Password?</a>
             <button type="submit">Login</button>
         </form>
     </div>

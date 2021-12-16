@@ -137,8 +137,8 @@
             <div class="home_logged_out">
                 <p>You are not logged in</p>
                 <a href="{% url 'login' %}">Login</a> 
-                <a href="{% url 'signup' %}">Sign Up</a> 
-                <a href="{% url 'reset_password' %}">Forgot Password?</a>
+                <a href="{% url 'users:signup' %}">Sign Up</a> 
+                <a href="{% url 'users:reset_password' %}">Forgot Password?</a>
             </div>
         </div>
         {% endif %}

@@ -1,7 +1,10 @@
 from django.urls import path
-from .views import SignUpView, accept_friend_request, send_friend_request
+from .views import SignUpView, accept_friend_request, send_friend_request, CompetitionDetailView
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
+
+
+# app_name = 'users'
 
 urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
@@ -14,6 +17,6 @@ urlpatterns = [
     path('profile', TemplateView.as_view(template_name='profile.html'), name='profile'),
     path('send_friend_request/<int:userID>/', send_friend_request, name='send friend request'),
     path('accept_friend_request/<int:requestID>/', accept_friend_request, name='accept friend request'),
+    path('competition_detail/<int:pk>/', CompetitionDetailView.as_view(), name='competition_detail'),
     path('competitions/', TemplateView.as_view(template_name='competitions.html'), name='competitions'),
-    
 ]
