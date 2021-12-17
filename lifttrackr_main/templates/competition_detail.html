@@ -9,9 +9,15 @@
  <div>
      <h2><a href="http://127.0.0.1:8000/">Home</a></h2>
      <h2><a href="http://127.0.0.1:8000/users/competitions/">Competitions</a></h2>
-
-
-    <button @click="new_comp_session(current_competition)">New Session</button>
+    
+    <div v-if="participants_contains()">
+        <button @click="new_comp_session(current_competition)">New Session</button>
+        <button @click="quit_competition()">Quit Competition</button>
+        <button @click="test()">Test</button>
+    </div>
+    <div v-if="!participants_contains()" >
+        <button @click="join_competition()">Join Competition</button>
+    </div>
         <div v-if="comp_session===true">
             <br>
             <button @click="cancel_workout()">Cancel</button>
@@ -31,16 +37,34 @@
 
 
     <h2>[[current_competition.title]]</h2>
+    <div v-if="current_competition.creator === currentUser.id">
+        <button @click="edit_competition()">Edit Competition</button>
+        <div>
+            <button>Now</button>
+        </div>
+    </div>
+    <div v-if="competition_builder===true">
+        <button @click="toggle_exercises()">Add Exercises</button>
+        <button @click="cancel_comp_edit()">Cancel</button>
+        <template v-if="show_allExercises===true">                        
+            <exercise-item id="ex_list_div"
+            :allexercises="allExercises"
+            ></exercise-item>         
+        </template>
+    </div>
     <p>Start: [[current_competition.start_date]]</p>
     <p>Stop: [[current_competition.stop_date]]</p>
     <p>Notes: [[current_competition.notes]]</p>
     <h3>Scoring:</h3>
     <div v-for="exercise in current_competition.comp_exercise_details">
         <h4>[[exercise.exercise_detail.name]]: [[exercise.exercise_points]] pts.</h4>
+        <div v-if="competition_builder===true">
+            <button @click="delete_comp_exercise(exercise)" v-if="current_competition.creator === currentUser.id">Remove</button>
+        </div>
     </div>
     <h3>Leaderboard:</h3>
-    <div v-for="competitor in current_competition.participant_details">
-        <p>[[competitor.username]] : [[competitor.competition_points]] pts.</p>
+    <div v-for="competitor in current_competition.score_details">
+        <p>[[competitor.user_details.username]] : [[competitor.score]] pts.</p>
     </div>
     <hr>
     <h3>Session History:</h3>

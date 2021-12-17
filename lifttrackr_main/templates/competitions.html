@@ -23,6 +23,7 @@
     </div>
     <div v-for="comp in allCompetitions">
         <h2><a :href="`/users/competition_detail/${comp.id}/`">[[comp.title]]</a></h2>
+        
        
         <p>Start: [[comp.start_date]]</p>
         <p>Start: [[comp.stop_date]]</p>
@@ -34,7 +35,7 @@
     
         <h4>Competitors:</h4>
         <div v-for="competitor in comp.participant_details">
-            <p>[[competitor.username]] : [[competitor.competition_points]] pts.</p>
+            <p>[[competitor.username]]</p>
         </div>
         <hr>
         

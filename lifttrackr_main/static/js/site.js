@@ -1,4 +1,50 @@
+Vue.component('comp-exercise-point-input', {
+    data: function() {
+        return {
+            point_expand: false,
+            exercise_points: ""
 
+        }
+    },
+    props: ['allexercises', 'exercise'],
+    methods: {
+        expand_points: function () {
+            if (this.point_expand===false) {
+                this.point_expand=true
+            } else {
+                this.point_expand=false
+            }
+        },
+        test: function (item) {
+            console.log(item)
+        },
+        add_to_comp: function (item) {
+            axios ({
+                method: 'post',
+                url: 'http://127.0.0.1:8000/api/v1/compworkouts/',
+                headers : {
+                    'X-CSRFToken': this.$root.csrf_token
+                },
+                data: {
+                    "exercise": item.id,
+                    "exercise_points": this.exercise_points,
+                    "competition": this.$root.current_competition.id
+                }
+            }).then(response => {
+                let path = window.location.pathname.split('/')
+                this.$root.comp_detail_load(path[path.length-2])
+            })
+        }
+
+    },
+    template: `
+    <div>       
+            <input type="number" v-model="exercise_points" placeholder="Points"/>   
+            <button @click="add_to_comp(exercise)" >Add to Comp</button>
+    </div>
+
+    `
+})
 
 Vue.component('template-editor', {
     data: function () {
@@ -461,6 +507,7 @@ Vue.component('category-item', {
 Vue.component('exercise-item', {
     data: function() {
         return{
+            exercise_points: ""
 
         }
     },
@@ -468,6 +515,7 @@ Vue.component('exercise-item', {
     methods: {
         add: function (item) {
             session = this.$root.reversed_sessions[0].id
+            
             
         
 
@@ -495,7 +543,8 @@ Vue.component('exercise-item', {
             this.$root.show_allExercises=false
             this.$root.show_allCategories=false
             this.$root.show_results=false
-        }
+        },
+        
     },
     template: `
     
@@ -504,7 +553,11 @@ Vue.component('exercise-item', {
         <div>        
             <div v-for="exercise in allexercises">
                 <div v-if="$root.template_start===false">
-                    <a @click="add(exercise)"><i class="fas fa-plus"></i>{{exercise.name}}</a>
+                    <a v-if="$root.competition_builder===false" @click="add(exercise)"><i class="fas fa-plus"></i>{{exercise.name}}</a>
+                    <div v-if="$root.competition_builder===true">
+                        <p>{{exercise.name}}</p>
+                        <comp-exercise-point-input :exercise="exercise" ></comp-exercise-point-input>
+                    </div>
                 </div>
                 <div v-if="$root.template_start===true">
                     <a @click="add_to_temp(exercise)"><i class="fas fa-plus"></i>{{exercise.name}}</a>
@@ -553,6 +606,8 @@ let app = new Vue ({
         current_competition: "", 
         start_date: "",
         stop_date: "",
+        resume: false,
+        exercise_score: ""
     },
     methods: {
         all_exercises: function() {
@@ -644,6 +699,7 @@ let app = new Vue ({
         },
         finish_session: function () {
             this.current_session=false
+            this.resume=false
             this.create_session=false
             this.show_allCategories=false
             this.show_allExercises=false
@@ -824,8 +880,13 @@ let app = new Vue ({
             }).then(response => {
                 this.loadCurrentUser()
                 this.current_session=true
+                this.resume=true
             })
             
+        },
+        cancel_resume: function () {
+            this.current_session=false
+            this.resume=false
         },
         remove_from_saved_template: function (array, item) {
             let temp_id = array.id
@@ -909,6 +970,24 @@ let app = new Vue ({
             let total_sets = 0
             let set_score = 0
             let count = 0
+
+            let score_id = ""
+            let comp_id = ""
+            let user = ""
+            let user_score = ""
+
+            for (score in this.current_competition.score_details) {
+                if (this.current_competition.score_details[score].user===this.currentUser.id) {
+                    score_id = this.current_competition.score_details[score].id
+                    comp_id = this.current_competition.score_details[score].competition
+                    user_score = this.current_competition.score_details[score].score
+                    user = this.current_competition.score_details[score].user
+                
+                }
+            }
+
+            
+
             for (i in item.comp_exercise_details) {
                 comp_exercise_list.push(item.comp_exercise_details[i].exercise, item.comp_exercise_details[i].exercise_points)
                 comp_exercise_values.push(item.comp_exercise_details[i].exercise_points)
@@ -939,24 +1018,21 @@ let app = new Vue ({
                     
                 }
                 
-                let new_score = this.currentUser.competition_points + set_score
+                let new_score = user_score + set_score
 
-                axios ({
+                axios({
                     method: 'patch',
-                    url: 'http://127.0.0.1:8000/api/v1/currentuser/',
+                    url: 'http://127.0.0.1:8000/api/v1/usercompscores/'+score_id+'/',
                     headers : {
                         'X-CSRFToken': this.csrf_token
                     },
                     data: {
-                        "competition_points": new_score,
+                        'score': new_score
                     }
                 }).then(response => {
-                    this.loadCurrentUser()
-                    this.load_competitions()
-                    this.comp_session = false
-
                     let path = window.location.pathname.split('/')
-                    this.comp_detail_load(path[path.length-2])
+                    this.comp_detail_load(path[path.length-2]) 
+                    this.comp_session=false
                 })
             }    
             
@@ -1034,26 +1110,123 @@ let app = new Vue ({
                     "title": this.session_name,
                     "creator": this.currentUser.id,
                     "participants": [this.currentUser.id],
-                    "start date": this.date_format(this.start_date),
-                    "stop_date": this.date_format(this.stop_date),
+                    "notes": this.search_text,
+                    "sessions": [],
+                    "start_date": this.start_date+"T00:00:00Z",
+                    "stop_date": this.stop_date+"T23:59:00Z",
                 }
-            }).then(response => {
+            }).then(response => {                
                 this.load_competitions()
+                
             })
         },
-        date_format: function(item) {
-            item = item.split('-')
-            item.reverse()
-            item = item.join('/')
+        edit_competition: function () {
+            this.competition_builder=true
 
-            console.log(item)
-            return `${item[1]}/${item[2]}/${item[0]}`
+        },
+        cancel_comp_edit () {
+            this.competition_builder=false
+        },
+        delete_comp_exercise: function (item) {
+            axios ({
+                method: 'delete',
+                url: 'http://127.0.0.1:8000/api/v1/compworkouts/'+item.id+'/',
+                headers : {
+                    'X-CSRFToken': this.csrf_token
+                },
+            }).then(response => {
+                let path = window.location.pathname.split('/')
+                this.comp_detail_load(path[path.length-2])
+            })
+        },
+        join_competition: function () {
+            let new_participants = this.current_competition.participants
+            new_participants.push(this.currentUser.id)
+            axios ({
+                method: 'patch',
+                url: 'http://127.0.0.1:8000/api/v1/competitions/'+this.current_competition.id+'/',
+                headers : {
+                    'X-CSRFToken': this.csrf_token
+                },
+                data: {
+                    "participants": new_participants
+                }
+            }).then(response => {
+
+                axios ({
+                    method: 'post',
+                    url: 'http://127.0.0.1:8000/api/v1/usercompscores/',
+                    headers : {
+                        'X-CSRFToken': this.csrf_token
+                    },
+                    data: {
+                        "user": this.currentUser.id,
+                        "competition": this.current_competition.id,
+                        "score": 0
+                    }
+                }).then(response => {
+                    let path = window.location.pathname.split('/')
+                    this.comp_detail_load(path[path.length-2])
+
+                })
+            })
+                
+        },
+        participants_contains: function() {
+            console.log(this.current_competition)
+            if (this.current_competition) {
+            return this.current_competition.participants.includes(this.currentUser.id) }
+         else {
+            return false }
+        
+        },
+        quit_competition: function () {
+            let new_participants = []
+            console.log(this.current_competition.participant_details)
+            for (p in this.current_competition.participant_details) {
+                if (this.currentUser.id != this.current_competition.participant_details[p].id)
+                new_participants.push(this.current_competition.participant_details[p].id)
+            }
+            axios ({ 
+                method: 'patch',
+                url: 'http://127.0.0.1:8000/api/v1/competitions/'+this.current_competition.id+'/',
+                headers : {
+                    'X-CSRFToken': this.csrf_token
+                },
+                data: {
+                    "participants": new_participants
+                }
+            }).then(response => {
+                let path = window.location.pathname.split('/')
+                this.comp_detail_load(path[path.length-2])            
+            })
+
+            for (score in this.current_competition.score_details) {
+                if (this.current_competition.score_details[score].user===this.currentUser.id) {
+                    score_id = this.current_competition.score_details[score].id
+                    comp_id = this.current_competition.score_details[score].competition
+                    user_score = this.current_competition.score_details[score].score
+                    user = this.current_competition.score_details[score].user
+                
+                }
             
-        }
+                axios ({ 
+                    method: 'delete',
+                    url: 'http://127.0.0.1:8000/api/v1/usercompscores/'+score_id+'/',
+                    headers : {
+                        'X-CSRFToken': this.csrf_token
+                    },
+                }).then(response => {
+                    let path = window.location.pathname.split('/')
+                    this.comp_detail_load(path[path.length-2])
+                })
+            }
+        },
         
         
-    
+
     },
+    
     computed: {
         reversed_sessions: function () {
             if (this.currentUser) {            

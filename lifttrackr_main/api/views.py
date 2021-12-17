@@ -2,12 +2,13 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework import filters
-from exercises.models import Exercise, Category, Session, ExerciseInstance, SetInstance, WorkoutTemplate, Competition, CompExercise
+from exercises.models import Exercise, Category, Session, UserCompScore, ExerciseInstance, SetInstance, WorkoutTemplate, Competition, CompExercise
+
 
 
 
 from users.models import CustomUser
-from .serializers import CategorySerializer, CompExerciseSerializer, CompetitionSerializer, ExerciseInstanceSerializer, SessionSerializer, UserSerializer, ExerciseSerializer, SetInstanceSerializer, WorkoutTemplateSerializer
+from .serializers import CategorySerializer, CompExerciseSerializer, CompetitionSerializer, ExerciseInstanceSerializer, SessionSerializer, UserCompScoreSerializer, UserSerializer, ExerciseSerializer, SetInstanceSerializer, WorkoutTemplateSerializer
 
 
 # Create your views here.
@@ -61,6 +62,9 @@ class CompExerciseViewSet(viewsets.ModelViewSet):
     queryset = CompExercise.objects.all() 
     serializer_class = CompExerciseSerializer
 
+class UserCompScoreViewSet(viewsets.ModelViewSet):
+    queryset = UserCompScore.objects.all()
+    serializer_class = UserCompScoreSerializer
 # class FriendRequestViewSet(viewsets.ModelViewSet):
 #     queryset = FriendRequest.objects.all()
 #     serializer_class = FriendRequestSerializer

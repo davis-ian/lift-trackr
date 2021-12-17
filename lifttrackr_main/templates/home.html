@@ -40,7 +40,9 @@
                             <button @click="toggle_exercises()">List</button>
                             <button @click="toggle_temps()">Templates</button>
                             <button @click="finish_session()">Finish Workout</button>
-                            <button @click="cancel_workout()">Cancel</button><br>
+
+                            <button v-if="resume===true" @click="cancel_resume()">Cancel</button><br>
+                            <button v-if="resume===false" @click="cancel_workout()">Cancel</button><br>
                             <br>
                             <input id="searchinput" type="text" @keydown.enter="search_exercise()" v-model="search_text" placeholder="Search"/>
                             <button @click="search_exercise()">Search</button>

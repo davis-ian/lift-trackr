@@ -76,3 +76,11 @@ class SetInstance(models.Model):
 
     def __str__(self):
         return f'{self.set} | {self.exerciseinstance}'
+
+class UserCompScore(models.Model):
+    user = models.ForeignKey(CustomUser, related_name="scores",on_delete=CASCADE)
+    competition = models.ForeignKey(Competition, related_name="scores", on_delete=CASCADE)
+    score = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.user} | {self.competition}'
