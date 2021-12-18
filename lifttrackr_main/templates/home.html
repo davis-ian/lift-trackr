@@ -7,20 +7,16 @@
    
     {% if user.is_authenticated %}
 
-        <div class="home_logged_in">
-            <nav>
-                <h1>[[message]]</h1>
-                <p><a href="{% url 'logout' %}">Logout</a></p>
-            </nav>
+        <div class="home">
             
             <div class="home_main">
                 {% csrf_token %}
-                <h2 v-if="current_session===false"><a href="http://127.0.0.1:8000/users/history">History</a></h2>
                 <h1>Hi {{user.username}}!</h1>
-            
+                
                 
                 <div id="start_work">
                     <div v-if="current_session===false">
+                        <h2 v-if="current_session===false"><a href="http://127.0.0.1:8000/users/history">History</a></h2>
                         <h2><a @click="resume_workout()">Resume Workout</a></h2>
                         <h2><a @click="toggle_new_workout()">New Workout</a></h2>
                         <h2><a @click="toggle_temps()">My Templates</a></h2>
@@ -36,17 +32,12 @@
                         
                             <br>
                             <hr>
-                            <button @click="toggle_categories()">Categories</button>
-                            <button @click="toggle_exercises()">List</button>
-                            <button @click="toggle_temps()">Templates</button>
-                            <button @click="finish_session()">Finish Workout</button>
-
-                            <button v-if="resume===true" @click="cancel_resume()">Cancel</button><br>
-                            <button v-if="resume===false" @click="cancel_workout()">Cancel</button><br>
-                            <br>
                             <input id="searchinput" type="text" @keydown.enter="search_exercise()" v-model="search_text" placeholder="Search"/>
                             <button @click="search_exercise()">Search</button>
                             <br>
+                            <button @click="toggle_categories()">Categories</button>
+                            <button @click="toggle_exercises()">List</button>
+                            <button @click="toggle_temps()">Templates</button>
                             <hr>
                             
                         
@@ -97,13 +88,14 @@
                     <template v-if="show_results===true">
                         <div id="search_div">
                             <a @click="close_search"><i class="fas fa-times"></i></a>
+                            
                             <div>
                                 <div v-for="result in search_results">
                                     <div v-if="template_start===false">
-                                        <p><a @click="add_result(result)"><i class="fas fa-plus"></i> [[result.name]]</p>
+                                        <p><a @click="add_result(result)"><i class="fas fa-plus"></i> [[result.name]]</a></p>
                                     </div>
                                     <div v-if="template_start===true">
-                                        <p><a @click="add_to_temp(result)"><i class="fas fa-plus"></i> [[result.name]]</p>
+                                        <p><a @click="add_to_temp(result)"><i class="fas fa-plus"></i> [[result.name]]</a></p>
                                     </div>
                                 </div>
                             <div>
@@ -114,12 +106,9 @@
                 <div id="my_temps">
                     <div v-if="show_my_temps===true">
                         <div v-for="temp in reversed_templates">
-                            <template-editor :temp="temp"></template-editor>
-                            
-                            
-                            
+                            <template-editor :temp="temp"></template-editor>                           
                             <button v-if="current_session===true" @click="exercises_from_temp(temp)">Start Session</button>
-                                          
+                            <hr>          
                         </div>
                     </div> 
                 </div>
@@ -135,9 +124,9 @@
 
             
         {% else %}
-        <div class="home_logged_out_container">
-            <div class="home_logged_out">
-                <p>You are not logged in</p>
+        <div class="logged_out_container">
+            <div class="logged_out">
+                <h1>lift trackr</h1>
                 <a href="{% url 'login' %}">Login</a> 
                 <a href="{% url 'users:signup' %}">Sign Up</a> 
                 <a href="{% url 'users:reset_password' %}">Forgot Password?</a>

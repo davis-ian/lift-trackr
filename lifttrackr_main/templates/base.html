@@ -15,6 +15,16 @@
 <body>
     <div id="app">        
         <main>
+            {% if user.is_authenticated %}
+            <nav>
+                <h1>[[message]]</h1>
+                <div id="nav_buttons">
+                    <p><a href="{% url 'home' %}">Home</a></p>
+                    <p><a href="{% url 'logout' %}">Logout</a></p>
+                </div>
+            </nav>
+            {% endif %}
+
             {% block content %}
             {% endblock %}
         </main>
@@ -24,5 +34,5 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="{% static 'js/site.js' %}"></script>
     
-</body>
+</body> 
 </html>

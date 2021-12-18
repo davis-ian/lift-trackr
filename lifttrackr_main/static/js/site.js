@@ -15,9 +15,7 @@ Vue.component('comp-exercise-point-input', {
                 this.point_expand=false
             }
         },
-        test: function (item) {
-            console.log(item)
-        },
+    
         add_to_comp: function (item) {
             axios ({
                 method: 'post',
@@ -33,6 +31,7 @@ Vue.component('comp-exercise-point-input', {
             }).then(response => {
                 let path = window.location.pathname.split('/')
                 this.$root.comp_detail_load(path[path.length-2])
+                this.$root.show_allExercises = false
             })
         }
 
@@ -135,6 +134,7 @@ Vue.component('template-editor', {
                 }
             }).then(response => {
                 this.$root.loadCurrentUser()
+                this.template_add=false
             })
         },
         delete_template: function (item) {
@@ -169,11 +169,10 @@ Vue.component('template-editor', {
 
         <h2>{{temp.name}}  <a v-if="template_edit===true" @click="delete_template(temp)"><i class="fas fa-times"></i></a></h2>
         <div v-for="workout in temp.temp_details">
-            <h4><button v-if="template_edit===true" @click="$root.remove_from_saved_template(temp, workout)">X</button> {{workout.name}}</h4>                                
+            <h4><button v-if="template_edit===true" @click="$root.remove_from_saved_template(temp, workout)"><i class="fas fa-times"></i></button> {{workout.name}}</h4>                                
         </div>
         <button v-if="template_edit===true" @click="add_to_temp_comp(temp)">add</button>
-        <br>
-        <br>
+        
         <div v-if="template_add===true">
             <input type="text" @keydown.enter="comp_search()" v-model="comp_search_text" placeholder="Search"/>
             <button @click="comp_search()">Seach</button>
@@ -184,10 +183,7 @@ Vue.component('template-editor', {
             <div v-for="item in comp_search_results">
                <p><button @click="add_comp_item(item, temp)">Add</button> {{item.name}}</p> 
             </div>
-        </div>
-
-        <hr>
-        
+        </div>        
     </div>
     `
 })
@@ -292,7 +288,8 @@ Vue.component('set-counter', {
         <input type="number" v-model="reps" placeholder="Reps"/>
         <input @keydown.enter="new_set(workout)" v-model="weight" type="number" placeholder="Weight"/>
         
-        <a v-if="$root.comp_session===true" @click="new_set(inst)"><i class="fas fa-plus"></i></a>
+        <a v-if="this.$root.comp_session===false" @click="new_set(workout)"><i class="fas fa-plus"></i></a>
+        <a v-if="this.$root.comp_session===true" @click="new_set(inst)"><i class="fas fa-plus"></i></a>
     
     </div>   
     `
@@ -353,6 +350,11 @@ Vue.component('session', {
             <set-counter :workout="workout"></set-counter>
     
         </div>
+        <button @click="$root.finish_session()">Finish Workout</button>
+        <button v-if="$root.resume===true" @click="$root.cancel_resume()">Cancel</button>
+        <br>
+        <button v-if="$root.resume===false" @click="$root.cancel_workout()">Cancel</button>
+        <br>
     </div>
     `
 })
@@ -491,10 +493,13 @@ Vue.component('category-item', {
     
     <div>
         <a @click="$root.show_allCategories=false"><i class="fas fa-times"></i></a>
+        <br>
+        <br>
         <div>
             <div v-for="category in allcategories">
             
                 <category :category=category></category>
+                <br>
                 
             </div>
         </div>
@@ -550,10 +555,11 @@ Vue.component('exercise-item', {
     
     <div>
         <a @click="$root.show_allExercises=false"><i class="fas fa-times"></i></a>
-        <div>        
+        <div> 
+        <br>       
             <div v-for="exercise in allexercises">
                 <div v-if="$root.template_start===false">
-                    <a v-if="$root.competition_builder===false" @click="add(exercise)"><i class="fas fa-plus"></i>{{exercise.name}}</a>
+                    <a v-if="$root.competition_builder===false" @click="add(exercise)"><i class="fas fa-plus"></i> {{exercise.name}}</a>
                     <div v-if="$root.competition_builder===true">
                         <p>{{exercise.name}}</p>
                         <comp-exercise-point-input :exercise="exercise" ></comp-exercise-point-input>
@@ -754,7 +760,10 @@ let app = new Vue ({
             }).then (response => {
                 this.search_results = response.data
                 this.show_results = true
+                this.show_my_temps = false
                 this.search_text=""
+                this.show_allCategories = false
+                this.show_allExercises=false
             })
         },
         add_result: function (item) {
@@ -787,7 +796,8 @@ let app = new Vue ({
                 this.show_my_temps = true
                 this.show_allExercises=false
                 this.show_allCategories=false   
-                this.template_start=false               
+                this.template_start=false    
+                this.show_results=false           
             }
         },
         toggle_new_workout: function () {
@@ -941,7 +951,7 @@ let app = new Vue ({
                 url: 'http://127.0.0.1:8000/api/v1/competitions/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
-                }
+                },
             }).then(response => {
                 this.allCompetitions = response.data
             })
@@ -1055,6 +1065,7 @@ let app = new Vue ({
                 this.loadCurrentUser()
                 this.load_competitions()
                 this.comp_session=true
+                this.competition_builder=false
 
                 let path = window.location.pathname.split('/')
                 this.comp_detail_load(path[path.length-2])
@@ -1117,11 +1128,16 @@ let app = new Vue ({
                 }
             }).then(response => {                
                 this.load_competitions()
+                this.competition_builder=false
                 
             })
         },
         edit_competition: function () {
+            if (this.competition_builder===false) {
             this.competition_builder=true
+            } else {
+                this.competition_builder = false
+            }
 
         },
         cancel_comp_edit () {
@@ -1173,9 +1189,13 @@ let app = new Vue ({
                 
         },
         participants_contains: function() {
-            console.log(this.current_competition)
+            let current_participants = []
+                for (i in this.current_competition.score_details) {
+                    current_participants.push(this.current_competition.score_details[i].user)
+                }
+
             if (this.current_competition) {
-            return this.current_competition.participants.includes(this.currentUser.id) }
+            return current_participants.includes(this.currentUser.id) }
          else {
             return false }
         
@@ -1222,7 +1242,31 @@ let app = new Vue ({
                 })
             }
         },
-        
+        comp_exercise_length: function () {
+            if (this.current_competition) {
+            return this.current_competition.comp_exercise_details.length
+            } else {return false} 
+        },
+        creator_joins_comp: function () {
+            axios ({
+                method: 'post',
+                url: 'http://127.0.0.1:8000/api/v1/usercompscores/',
+                headers : {
+                    'X-CSRFToken': this.csrf_token
+                },
+                data: {
+                    "user": this.currentUser.id,
+                    "competition": this.current_competition.id,
+                    "score": 0
+                }
+            }).then(response => {
+                let path = window.location.pathname.split('/')
+                this.comp_detail_load(path[path.length-2])
+                this.competition_builder=true
+
+            })
+        } 
+       
         
 
     },
@@ -1238,6 +1282,10 @@ let app = new Vue ({
                 y = this.currentUser.workout_templates.slice().reverse()
                 return y}
         },
+        reversed_competitions: function () {
+            if (this.allCompetitions)
+                return this.allCompetitions.slice().reverse()
+        }
         
        
 

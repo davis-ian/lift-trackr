@@ -82,5 +82,8 @@ class UserCompScore(models.Model):
     competition = models.ForeignKey(Competition, related_name="scores", on_delete=CASCADE)
     score = models.IntegerField(default=0)
 
+    class Meta:
+        ordering = ['-score']
+
     def __str__(self):
         return f'{self.user} | {self.competition}'

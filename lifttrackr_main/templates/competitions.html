@@ -5,23 +5,25 @@
 {% block content %}
 {% if user.is_authenticated %}
 {% csrf_token %}
-<h2>Competitions</h2>
-<h2><a href="http://127.0.0.1:8000/">Home</a></h2>
 
-
-
-<div>
-    
-    <button @click="new_competition_time()">New Competition</button>
-    <div v-if="competition_builder===true">
+<div class="competition_container"> 
+    <h2>Competitions</h2>
+    <button v-if="competition_builder===false" @click="new_competition_time()">New Competition</button>
+    <div class="competition_builder" v-if="competition_builder===true">
         <input type="text" v-model="session_name" placeholder="Competition Name"/>
         <br>
         <textarea v-model="search_text" placeholder="Ground Rules"></textarea>
-        <input type="date" v-model="start_date" placeholder="Start Date mm/dd/yyyy"/>
-        <input type="date" v-model="stop_date" placeholder="Stop Date mm/dd/yyyy"/>
-        <button @click="start_competition()">Boom</button>
+        <br>
+        <p>Start Date:</p>
+        <input type="date" v-model="start_date" placeholder="Start Date"/>
+        
+        <p>Stop Date: </p>
+        <input type="date" v-model="stop_date" placeholder="Stop Date"/>
+        <br>
+        <button @click="competition_builder=false">Cancel</button>
+        <button @click="start_competition()">Save Competition</button>
     </div>
-    <div v-for="comp in allCompetitions">
+    <div class="competitions" v-for="comp in reversed_competitions">
         <h2><a :href="`/users/competition_detail/${comp.id}/`">[[comp.title]]</a></h2>
         
        
@@ -34,13 +36,14 @@
         </div>
     
         <h4>Competitors:</h4>
-        <div v-for="competitor in comp.participant_details">
-            <p>[[competitor.username]]</p>
+        <div v-for="competitor in comp.score_details">
+            <p>[[competitor.user_details.username]]</p>
         </div>
-        <hr>
+        
         
     </div>
 </div>
+
 {% else %}
 <h1>It doesn't look like you are currently logged in</h1>
 {% endif %}

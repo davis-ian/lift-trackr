@@ -65,8 +65,4 @@ class CompExerciseViewSet(viewsets.ModelViewSet):
 class UserCompScoreViewSet(viewsets.ModelViewSet):
     queryset = UserCompScore.objects.all()
     serializer_class = UserCompScoreSerializer
-# class FriendRequestViewSet(viewsets.ModelViewSet):
-#     queryset = FriendRequest.objects.all()
-#     serializer_class = FriendRequestSerializer
-    
     

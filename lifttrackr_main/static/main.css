@@ -9,7 +9,8 @@ img {
     display: block;    
 }
 body {
-    margin: 0
+    margin: 0;
+    font-family: "Poppins", sans-serif; 
 }
 button {
     background-color: #21BF65;
@@ -17,143 +18,168 @@ button {
     border-radius: 10px;
     font-family: "Poppins", sans-serif;
     color: white;
-    font-size: 1em
+    font-size: 1em;
+    cursor: pointer;
+    padding: 1px 6px;
+    margin: .5em 0;
+
+}
+a {
+    text-decoration: none;
+    background-color: #21BF65;
+    border: 2px solid #21BF65;
+    border-radius: 10px;
+    font-family: "Poppins", sans-serif;
+    color: white;
+    font-size: 1em;
+    padding: 1px 6px;
+    margin: .5em 0;
+    cursor: pointer;
 }
 input {
     font-family: "Poppins", sans-serif;
     font-size: 1em;
     border-radius: 10px;
 }
-/* LOGIN PAGE */
-.login_container {
-    background-color: #21BF65;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-.login {
-    border-radius: 20px;
-    border: 2px solid black;
-    background-color: white;
-    width: 80%;
-    
-    padding: 2em;
-    box-shadow: 10px 10px 10px;
+textarea {
     font-family: "Poppins", sans-serif;
-    font-size: 2em;
-    text-align: center;
-}
-.login button {
-    background-color: #21BF65;
-    border: 2px solid #21BF65;
-    color: white;
     font-size: 1em;
-    border-radius: 20px;
-    margin: 1em;
-    padding: .5em;
+    border-radius: 10px;
+    width: 100%;
+    height: 100px;
 }
-.login a {
-    font-size: .7em;
-}
-.login input {
-    font-size: 1em;
-}
-
-/* HOME PAGE LOGGED OUT */
-
-.home_logged_out_container {
-    background-color: #21BF65;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.home_logged_out {
-    border-radius: 20px;
-    border: 2px solid black;
-    background-color: white;
-    width: 80%;
-    height: 50%;
-    padding: 2em;
-    box-shadow: 10px 10px 10px;
-    font-family: "Poppins", sans-serif;
-    font-size: 2em;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-
-}
-.home_logged_out a {
-    background-color: #21BF65;
-    border: 2px solid #21BF65;
-    color: white;
-    font-size: 1em;
-    border-radius: 20px;
-    margin: 1em;
-    padding: .5em;
-    text-decoration: none;
-}
-
-/* HOME LOGGED IN */
 nav {
     background-color: #21BF65;
-    margin: 0;
-    padding: 2em;
-    display: flex;
-    justify-content: space-between;
+    padding: 1em 2em;
 }
-nav a {
-    color: black;
-    text-decoration: none;
+i {
     cursor: pointer
 }
-.home_logged_in {
-    font-family: "Poppins", sans-serif;
-    height: 100vh;
 
-}
-.home_main {   
-    padding: 2em; 
-}
-.home_main a {
-    cursor: pointer;   
-    color: black;    
-    text-decoration: none;    
-}
+/* LOGGED OUT */
 
-/* HISTORY PAGE */
-
-.history_container {
+.logged_out_container {
     background-color: #21BF65;
-    font-family: "Poppins", sans-serif;
+    height: 100vh;
     padding: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.history a {
-    text-decoration: none;
-    color: black;
-}
-#my_sessions {
+
+.logged_out {
     background-color: white;
-    border: 2px solid black;
     box-shadow: 5px 5px 5px;
-    margin: 2em 0;
+    border-radius: 15px;
     padding: 2em;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
     
 
 }
-#history_header{
-    padding: 0 2em
+
+
+
+/* HOME */
+#nav_buttons {
+    display: flex;
+}
+#nav_buttons a {    
+    padding: 0;
+}
+.home {
+    padding: 2em;
 }
 
-/* PROFILE PAGE */
-.profile {
+
+
+/* HISTORY */
+
+.history {
     padding: 2em;
-    font-family: "Poppins", sans-serif
 }
-.profile a {
-    text-decoration: none;
-    color: black
+#my_sessions {
+    border: 1px solid #2D3B40;
+    border-radius: 15px;
+    margin: 1em 0;
+    padding: 2em;
+    box-shadow: 5px 5px 5px;
 }
+
+/* COMPETITIONS */
+.competition_container {
+    padding: 2em;
+}
+.competitions {
+    border: 1px solid #2D3B40;
+    border-radius: 15px;
+    margin: 1em 0;
+    padding: 2em;
+    box-shadow: 5px 5px 5px;
+
+}
+.competition_builder {
+   
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+}
+
+/* COMPETITION DETAIL */
+.competition_detail {
+    padding: 2em;
+}
+.comp_session_wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.comp_session_wrapper button {
+    color: #21BF65;
+    border: none;
+    background-color: white;
+    
+}
+.leaderboard {
+    border: 3px solid #21BF65;
+    padding: 2em;
+    text-align: center;
+    border-radius: 15px;
+}
+.leaderboard p {
+    border: 1px solid black;
+    box-shadow: 2px 2px 2px;
+    padding: 0;
+}
+
+#comp_edit button {
+    color: #21BF65;
+    border: none;
+    background-color: white;
+    display: flex;
+    
+}
+#scoring_div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+#scoring_div button {
+    color: #21BF65;
+    border: none;
+    background-color: white;
+    display: flex;
+}
+
+#start_comp_exercise {
+    display: flex;
+    align-items: center;
+}
+#start_comp_exercise button {
+    color: #21BF65;
+    border: none;
+    background-color: white;
+    display: flex;
+}
+

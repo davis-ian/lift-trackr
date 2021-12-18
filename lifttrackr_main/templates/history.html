@@ -8,10 +8,7 @@
 <div class="history_container">
 
     <div class="history">
-        <div id="history_header">
-            <h2><a href="http://127.0.0.1:8000">Home</a></h2>
-            <h1>History</h1>
-        </div>
+        
 
         <div v-for="session in reversed_sessions">
             <div id="my_sessions">
@@ -21,11 +18,10 @@
                     <div v-for="set in exercise.set_detail">
                         <p>Set [[set.set]]: [[set.reps]] reps @ [[set.weight]] lbs.</p>
                     </div>
-                </div>
-                <h3><a @click="delete_workout(session)"><i class="fas fa-trash-alt"></i></a></h3>
-                
-                <save-template :session="session"></save-template>
-               
+                    <hr>
+                </div>                
+                <h3><a @click="delete_workout(session)"><i class="fas fa-trash-alt"></i></a></h3>                
+                <save-template :session="session"></save-template>               
             </div>
             
         </div>

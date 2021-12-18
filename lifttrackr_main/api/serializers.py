@@ -18,6 +18,7 @@ class NestedUserSerializer(serializers.ModelSerializer):
 class NestedUserCompScoreSerializer(serializers.ModelSerializer):
     user_details = NestedUserSerializer(source='user')
     class Meta:
+        
         fields = (
             'user',
             'competition',
@@ -26,6 +27,8 @@ class NestedUserCompScoreSerializer(serializers.ModelSerializer):
             'user_details',
         )
         model = UserCompScore
+
+
 
 class NestedRequestSerializer(serializers.ModelSerializer):
     class Meta:
@@ -222,6 +225,7 @@ class CompetitionSerializer(serializers.ModelSerializer):
             'id',
         )
         model = Competition
+    
 
 class CompExerciseSerializer(serializers.ModelSerializer):
     exercise_detail = NestedExerciseSerializer(source='exercise', read_only=True)
@@ -237,6 +241,7 @@ class CompExerciseSerializer(serializers.ModelSerializer):
 
 class UserCompScoreSerializer(serializers.ModelSerializer):
     class Meta: 
+        
         fields = (
             'user',
             'competition',
