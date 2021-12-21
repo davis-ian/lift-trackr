@@ -19,7 +19,7 @@ Vue.component('comp-exercise-point-input', {
         add_to_comp: function (item) {
             axios ({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/v1/compworkouts/',
+                url: '/api/v1/compworkouts/',
                 headers : {
                     'X-CSRFToken': this.$root.csrf_token
                 },
@@ -79,7 +79,7 @@ Vue.component('template-editor', {
             console.log(item.id)
             axios({
                 method: 'patch',
-                url: 'http://127.0.0.1:8000/api/v1/templates/'+item.id+'/',
+                url: '/api/v1/templates/'+item.id+'/',
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
@@ -104,7 +104,7 @@ Vue.component('template-editor', {
         comp_search: function () {
             axios ({
                 method: 'get',
-                url: 'http://127.0.0.1:8000/api/v1/exercises/',
+                url: '/api/v1/exercises/',
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
@@ -127,7 +127,7 @@ Vue.component('template-editor', {
 
             axios ({
                 method: 'patch',
-                url: 'http://127.0.0.1:8000/api/v1/templates/'+temp.id+'/',
+                url: '/api/v1/templates/'+temp.id+'/',
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
@@ -143,7 +143,7 @@ Vue.component('template-editor', {
             console.log(item.id)
             axios ({
                 method: 'delete',
-                url: 'http://127.0.0.1:8000/api/v1/templates/'+item.id,
+                url: '/api/v1/templates/'+item.id,
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
@@ -214,7 +214,7 @@ Vue.component('save-template', {
 
             axios({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/v1/templates/',
+                url: '/api/v1/templates/',
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
@@ -263,7 +263,7 @@ Vue.component('set-counter', {
 
             axios ({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/v1/setinstances/',
+                url: '/api/v1/setinstances/',
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
@@ -317,7 +317,7 @@ Vue.component('session', {
 
             axios({
                 method: "delete",
-                url: 'http://127.0.0.1:8000/api/v1/exerciseinstances/'+item.id,
+                url: '/api/v1/exerciseinstances/'+item.id,
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
@@ -330,7 +330,7 @@ Vue.component('session', {
 
             axios({ 
                 method: "delete",
-                url: "http://127.0.0.1:8000/api/v1/setinstances/"+item.id,
+                url: "/api/v1/setinstances/"+item.id,
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
@@ -438,7 +438,7 @@ Vue.component('category-exercise', {
 
             axios({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/v1/exerciseinstances/',
+                url: '/api/v1/exerciseinstances/',
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
@@ -548,7 +548,7 @@ Vue.component('exercise-item', {
 
             axios({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/v1/exerciseinstances/',
+                url: '/api/v1/exerciseinstances/',
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
