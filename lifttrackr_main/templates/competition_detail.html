@@ -40,17 +40,31 @@
 
     <div v-if="competition_builder===true">
         <button class="black_btn" @click="delete_competition()">Delete Comp</button>
-        <button class="green_btn" @click="toggle_exercises()">Add Exercise</button>
+        <button class="green_btn" @click="toggle_exercises()">List</button>        
+        <button class="green_btn" @click="toggle_categories()">Categories</button>
+        <input type="text" @keydown.enter="search_exercise()" v-model="search_text" placeholder="Exercises"/>
+        <button class="green_btn" @click="search_exercise()"><i class="fas fa-search"></i></button>
         <template v-if="show_allExercises===true">                        
             <exercise-item id="ex_list_div"
             :allexercises="allExercises"
             ></exercise-item>         
         </template>
+        <template v-if="show_allCategories===true">
+            <category-item id="category_div"
+            :allcategories="allCategories"
+            ></category-item>
+        </template>
+        <div v-if="show_results===true">
+            <div v-for="exercise in search_results">
+                <p>[[exercise.name]]</p>
+                <comp-exercise-point-input :exercise="exercise" ></comp-exercise-point-input>
+            </div>
+        </div>
     </div>
 
     <div class="leaderboard">
         <h2 id="countdown" v-html="countdown_time"></h2>
-        <h3>Leaderboard:</h3>
+        <h3>Leaderboard</h3>
         <div v-for="competitor in current_competition.score_details">
             <p>[[competitor.user_details.username]]  [[competitor.score]] pts.</p>
         </div>  
@@ -69,9 +83,9 @@
     <div v-if="comp_exercise_length()!=0">
         <h3>Competition Exercises:</h3>
         <div id="scoring_div" v-for="exercise in current_competition.comp_exercise_details">
-            <h4>[[exercise.exercise_detail.name]]: [[exercise.exercise_points]] pts.</h4>
+            <h4>[[exercise.exercise_detail.name]]  [[exercise.exercise_points]] pts.</h4>
             <div v-if="competition_builder===true">
-                <button class="green_btn" @click="delete_comp_exercise(exercise)"
+                <button class="black_btn3" @click="delete_comp_exercise(exercise)"
                 v-if="current_competition.creator === currentUser.id">
                 <i class="fas fa-times"></i></button>
             </div>

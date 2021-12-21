@@ -32,6 +32,8 @@ Vue.component('comp-exercise-point-input', {
                 let path = window.location.pathname.split('/')
                 this.$root.comp_detail_load(path[path.length-2])
                 this.$root.show_allExercises = false
+                this.$root.show_allCategories=false
+                this.$root.show_results=false
             })
         }
 
@@ -236,7 +238,7 @@ Vue.component('save-template', {
         <button class="green_btn" @click="comp_template_save_toggle()">CreateTemplate</button>
 
             <div v-if="save_template_show===true">
-                <input type="text" v-model="template_name" placeholder="Template Name"/>
+                <input type="text" v-model="template_name" @keydown.enter="save_template(session)" placeholder="Template Name"/>
                 <button class="green_btn" @click="save_template(session)">Save Template</button>
             </div>
         </div>
@@ -466,11 +468,16 @@ Vue.component('category-exercise', {
     },
     template: `
     <div class="category_items">
-        <div v-if="$root.template_start===false">            
+        <div v-if="$root.current_session===true">            
             <a class="green_btn" @click="add(exercise)">        
             <i class="fas fa-plus"></i>{{exercise.name}}</a> 
             
         </div>
+        <div v-if="$root.competition_builder===true">
+            <p>{{exercise.name}}</p>
+            <comp-exercise-point-input :exercise="exercise" ></comp-exercise-point-input>
+        </div>
+
         <div v-else-if="$root.template_start===true">
             <a class="green_btn" @click="add_to_temp(exercise)">        
             <i class="fas fa-plus"></i>{{exercise.name}}</a>
@@ -632,7 +639,7 @@ let app = new Vue ({
         start_date: "",
         end_date: "",
         countdown_time: "",
-        
+        my_competitions: []
     },
     methods: {
         all_exercises: function() {
@@ -664,7 +671,8 @@ let app = new Vue ({
                 method: 'get',
                 url: 'http://127.0.0.1:8000/api/v1/currentuser/',
             }).then(response => {
-                this.currentUser = response.data                
+                this.currentUser = response.data    
+                           
             })
         },
         newSession: function() {   
@@ -1369,10 +1377,10 @@ let app = new Vue ({
                 }
             }, 1000)
         },
-        
-        
-            
-        
+        comp_over: function (item) {
+            console.log(item)
+        }
+              
        
     },
     
@@ -1391,6 +1399,7 @@ let app = new Vue ({
             if (this.allCompetitions)
                 return this.allCompetitions.slice().reverse()
         },
+       
         
         
        
@@ -1405,6 +1414,9 @@ let app = new Vue ({
         this.load_competitions()
         
         
+        
+        
+        
     },
     mounted: function() {
         this.csrf_token = document.querySelector("input[name=csrfmiddlewaretoken]").value
@@ -1412,7 +1424,7 @@ let app = new Vue ({
         let path = window.location.pathname.split('/')
         this.comp_detail_load(path[path.length-2])
 
-
+        
         
         
         

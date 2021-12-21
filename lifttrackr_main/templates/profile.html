@@ -7,18 +7,35 @@
 {% csrf_token %}
 <div class="profile">
 
-    <h2>{{user.username}}'s Profile</h2>
-    <p>Lifting since: {{user.date_joined}}</p>
-    <p>Current Streak: {{user.streak}}</p>
-
-    <h3>My Competitions:</h3>
-    <div v-for="comp in allCompetitions">
-        <div v-for="score in comp.score_details">        
-        <a :href="`/users/competition_detail/${comp.id}/`"
-        v-if="score.user===currentUser.id">[[comp.title]]</a>
-        </div>
-        <br>
+    <div>
+        <h2>{{user.username}}'s Profile</h2>
+        <p>Lifting since: {{user.date_joined}}</p>
+        <p>Current Streak: {{user.streak}}</p>
     </div>
+
+    
+
+    <div>
+        <h3>MyCompetitions</h3>
+        <div v-for="comp in allCompetitions">
+            <div  v-for="score in comp.score_details">              
+                <div id="compdiv" v-if="score.user===currentUser.id" >
+                    <p><a class="green_btn" :href="`/users/competition_detail/${comp.id}/`">[[comp.title]]</a></p>
+                </div>        
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h3>Friends</h3>
+        <div v-for="user in currentUser.friends_list">
+            <p>[[user.username]]</p>
+        </div>
+    </div>
+
+    
+
+
     
 </div>
 
@@ -29,3 +46,10 @@
 
 {% endif %}
 {% endblock%}
+
+{% comment %} <div id="my_comps" v-for="comp in allCompetitions">
+    <div v-for="score in comp.score_details">              
+        <a v-if="score.user===currentUser.id" :href="`/users/competition_detail/${comp.id}/`"
+        >[[comp.title]]</a>        
+    </div>
+</div> {% endcomment %}

@@ -37,6 +37,15 @@ def accept_friend_request (request, requestID):
     from_user.save()
     return HttpResponseRedirect('http://127.0.0.1:8000/users/friends')
 
+def deny_friend_request (request, requestID):
+    from_user = CustomUser.objects.get(id=request.user.id)
+    to_user = CustomUser.objects.get(id=requestID)
+    from_user.request_out.remove(to_user)
+    to_user.request_in.remove(from_user)
+    to_user.save()
+    from_user.save()
+    return HttpResponseRedirect('http://127.0.0.1:8000/users/friends')
+
 class CompetitionDetailView(DetailView):
     model = Competition
     template_name = 'competition_detail.html'

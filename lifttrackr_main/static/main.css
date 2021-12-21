@@ -124,7 +124,7 @@ i {
 
 .logged_out {
     background-color: white;
-    box-shadow: 5px 5px 5px;
+    box-shadow: 5px 5px 5px #13703b;
     border-radius: 15px;
     padding: 2em;
     display: flex;
@@ -229,7 +229,7 @@ i {
     border-radius: 15px;
     margin: 1em 0;
     padding: 2em;
-    box-shadow: 5px 5px 5px;
+    box-shadow: 5px 5px 5px lightgray;
 }
 
 
@@ -238,8 +238,14 @@ i {
     padding: 2em;
 }
 .competitions {   
-    border-radius: 15px;
+    border: 2px solid #168647;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px lightgray;
+    margin: 2em 0;
+    text-align: center;
+
 }
+
 .competition_builder {
     
     padding: 2em;
@@ -283,7 +289,7 @@ i {
 }
 .leaderboard p {
     border: 1px solid black;
-    box-shadow: 2px 2px 2px;
+    box-shadow: 3px 3px 3px #13703b;
     padding: 0;
     background-color: white;
     color: black;
@@ -331,5 +337,9 @@ i {
 /* PROFILE */
 .profile {
     padding: 2em;
+    display: flex;
+    flex-direction: column;
 }
-
+#compdiv {
+    height: 1.5em
+}

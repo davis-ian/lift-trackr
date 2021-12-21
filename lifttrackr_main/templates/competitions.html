@@ -40,27 +40,26 @@
     </div>
 
     <div v-if="show_results===true">
-        <h3 v-for="comp in search_results "><a class="green_btn" :href="`/users/competition_detail/${comp.id}/`">[[comp.title]]</a></h3>
-        
+        {% comment %} <h3 v-for="comp in search_results "><a class="green_btn" :href="`/users/competition_detail/${comp.id}/`">[[comp.title]]</a></h3> {% endcomment %}
+        <div v-for="comp in search_results" class="competitions">
+            <h3><a class="green_btn" 
+                :href="`/users/competition_detail/${comp.id}/`">[[comp.title]]</a></h3></h3>
+                <div v-for="competitor in comp.score_details">
+                    <p>[[competitor.user_details.username]] : [[competitor.score]] pts.</p>
+                </div>
+        </div>
     </div>
 
-    <div class="competitions" v-for="comp in reversed_competitions">
-        <h3 v-if="show_results===false"><a class="green_btn" :href="`/users/competition_detail/${comp.id}/`">[[comp.title]]</a></h3>
-        
-       
-        {% comment %} <p>Start: [[comp.start_date]]</p>
-        <p>Start: [[comp.stop_date]]</p>
-       
-        <h4>Scoring:</h4>
-        <div v-for="exercise in comp.comp_exercise_details">
-            <h5>[[exercise.exercise_detail.name]] : [[exercise.exercise_points]] pts.</h5>
+    <div v-if="show_results===false">
+        <div v-for="comp in reversed_competitions" class="competitions">
+            
+            <h3><a class="green_btn" 
+            :href="`/users/competition_detail/${comp.id}/`">[[comp.title]]</a></h3>
+
+            <div v-for="competitor in comp.score_details">
+                <p>[[competitor.user_details.username]] : [[competitor.score]] pts.</p>
+            </div>
         </div>
-    
-        <h4>Competitors:</h4>
-        <div v-for="competitor in comp.score_details">
-            <p>[[competitor.user_details.username]]</p>
-        </div>
-         {% endcomment %}
         
     </div>
 </div>
