@@ -226,7 +226,7 @@ Vue.component('save-template', {
             }).then(response => {
                 
                 console.log("before")
-                location.href ="http://127.0.0.1:8000/"
+                location.href ="/"
                 console.log("after")
                 this.$root.loadCurrentUser()
                 this.$root.show_my_temps=true
@@ -645,7 +645,7 @@ let app = new Vue ({
         all_exercises: function() {
             axios ({
                 method: 'get',
-                url: 'http://127.0.0.1:8000/api/v1/exercises',
+                url: '/api/v1/exercises',
                 params: {
                     limit: 20
                 }
@@ -656,7 +656,7 @@ let app = new Vue ({
         all_categories: function() {               
             axios ({
                 method: 'get',
-                url: 'http://127.0.0.1:8000/api/v1/categories',
+                url: '/api/v1/categories',
             }).then(response => {
                 this.allCategories = response.data                
             })
@@ -669,7 +669,7 @@ let app = new Vue ({
         loadCurrentUser: function() {
             axios({
                 method: 'get',
-                url: 'http://127.0.0.1:8000/api/v1/currentuser/',
+                url: '/api/v1/currentuser/',
             }).then(response => {
                 this.currentUser = response.data    
                            
@@ -678,7 +678,7 @@ let app = new Vue ({
         newSession: function() {   
             axios({ 
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/v1/sessions/',
+                url: '/api/v1/sessions/',
                 headers: {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -695,7 +695,7 @@ let app = new Vue ({
         getSession: function () {
             axios({
                 method: 'get',
-                url: 'http://127.0.0.1:8000/api/v1/sessions/' + this.current_session_id,
+                url: '/api/v1/sessions/' + this.current_session_id,
                 headers: {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -744,7 +744,7 @@ let app = new Vue ({
             x = this.reversed_sessions[0].id            
             axios ({
                 method: 'delete',
-                url: 'http://127.0.0.1:8000/api/v1/sessions/'+ x,
+                url: '/api/v1/sessions/'+ x,
                 headers: {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -764,7 +764,7 @@ let app = new Vue ({
         delete_workout: function (item) {            
             axios ({
                 method: 'delete',
-                url: 'http://127.0.0.1:8000/api/v1/sessions/'+item.id,
+                url: '/api/v1/sessions/'+item.id,
                 headers: {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -778,7 +778,7 @@ let app = new Vue ({
         search_exercise: function () {
             axios ({
                 method: 'get',
-                url: 'http://127.0.0.1:8000/api/v1/exercises',
+                url: '/api/v1/exercises',
                 headers: {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -798,7 +798,7 @@ let app = new Vue ({
             session = this.reversed_sessions[0].id
             axios({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/v1/exerciseinstances/',
+                url: '/api/v1/exerciseinstances/',
                 headers: {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -841,7 +841,7 @@ let app = new Vue ({
             for (x in item.temp_details) {
                 axios ({
                     method: 'post',
-                    url: 'http://127.0.0.1:8000/api/v1/exerciseinstances/',
+                    url: '/api/v1/exerciseinstances/',
                     headers: {
                         'X-CSRFToken': this.csrf_token
                     },
@@ -883,7 +883,7 @@ let app = new Vue ({
             }            
             axios ({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/v1/templates/',
+                url: '/api/v1/templates/',
                 headers: {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -911,7 +911,7 @@ let app = new Vue ({
             let sesh = this.currentUser.session_details[i].id
             axios ({
                 method: 'get',
-                url: 'http://127.0.0.1:8000/api/v1/sessions/'+ sesh,
+                url: '/api/v1/sessions/'+ sesh,
                 headers: {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -943,7 +943,7 @@ let app = new Vue ({
 
             axios ({
                 method: 'patch',
-                url: 'http://127.0.0.1:8000/api/v1/templates/'+temp_id+'/',
+                url: '/api/v1/templates/'+temp_id+'/',
                 headers: {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -961,7 +961,7 @@ let app = new Vue ({
         search_users: function () {
             axios ({
                 method: 'get',
-                url: 'http://127.0.0.1:8000/api/v1/users/',
+                url: '/api/v1/users/',
                 headers: {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -976,7 +976,7 @@ let app = new Vue ({
         load_competitions: function () {
             axios ({
                 method: 'get',
-                url: 'http://127.0.0.1:8000/api/v1/competitions/',
+                url: '/api/v1/competitions/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -991,7 +991,7 @@ let app = new Vue ({
 
             axios ({
                 method: 'patch',
-                url: 'http://127.0.0.1:8000/api/v1/currentuser/',
+                url: '/api/v1/currentuser/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -1007,7 +1007,7 @@ let app = new Vue ({
 
             axios({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/v1/sessions/',
+                url: '/api/v1/sessions/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -1032,7 +1032,7 @@ let app = new Vue ({
 
             axios ({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/v1/exerciseinstances/',
+                url: '/api/v1/exerciseinstances/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -1052,7 +1052,7 @@ let app = new Vue ({
         comp_detail_load: function(item) {
             axios ({ 
                 method: 'get',
-                url: 'http://127.0.0.1:8000/api/v1/competitions/'+item+'/',
+                url: '/api/v1/competitions/'+item+'/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -1068,7 +1068,7 @@ let app = new Vue ({
         start_competition: function() {
             axios({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/v1/competitions/',
+                url: '/api/v1/competitions/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -1103,7 +1103,7 @@ let app = new Vue ({
         delete_comp_exercise: function (item) {
             axios ({
                 method: 'delete',
-                url: 'http://127.0.0.1:8000/api/v1/compworkouts/'+item.id+'/',
+                url: '/api/v1/compworkouts/'+item.id+'/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -1117,7 +1117,7 @@ let app = new Vue ({
             new_participants.push(this.currentUser.id)
             axios ({
                 method: 'patch',
-                url: 'http://127.0.0.1:8000/api/v1/competitions/'+this.current_competition.id+'/',
+                url: '/api/v1/competitions/'+this.current_competition.id+'/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -1128,7 +1128,7 @@ let app = new Vue ({
 
                 axios ({
                     method: 'post',
-                    url: 'http://127.0.0.1:8000/api/v1/usercompscores/',
+                    url: '/api/v1/usercompscores/',
                     headers : {
                         'X-CSRFToken': this.csrf_token
                     },
@@ -1166,7 +1166,7 @@ let app = new Vue ({
             }
             axios ({ 
                 method: 'patch',
-                url: 'http://127.0.0.1:8000/api/v1/competitions/'+this.current_competition.id+'/',
+                url: '/api/v1/competitions/'+this.current_competition.id+'/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -1189,7 +1189,7 @@ let app = new Vue ({
             
                 axios ({ 
                     method: 'delete',
-                    url: 'http://127.0.0.1:8000/api/v1/usercompscores/'+score_id+'/',
+                    url: '/api/v1/usercompscores/'+score_id+'/',
                     headers : {
                         'X-CSRFToken': this.csrf_token
                     },
@@ -1207,7 +1207,7 @@ let app = new Vue ({
         creator_joins_comp: function () {
             axios ({
                 method: 'post',
-                url: 'http://127.0.0.1:8000/api/v1/usercompscores/',
+                url: '/api/v1/usercompscores/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
                 },
@@ -1271,7 +1271,7 @@ let app = new Vue ({
 
                 axios({
                     method: 'patch',
-                    url: 'http://127.0.0.1:8000/api/v1/usercompscores/'+score_id+'/',
+                    url: '/api/v1/usercompscores/'+score_id+'/',
                     headers : {
                         'X-CSRFToken': this.csrf_token
                     },
@@ -1312,20 +1312,20 @@ let app = new Vue ({
             console.log(this.current_competition.id)
             axios ({
                 method: 'delete',
-                url: 'http://127.0.0.1:8000/api/v1/competitions/'+this.current_competition.id+'/',
+                url: '/api/v1/competitions/'+this.current_competition.id+'/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
                 },
             }).then(response => {
             
-                location.href = 'http://127.0.0.1:8000/users/competitions/'
+                location.href = '/users/competitions/'
 
             })
         },
         search_competitions: function () {
             axios ({
                 method: 'get',
-                url: 'http://127.0.0.1:8000/api/v1/competitions/',
+                url: '/api/v1/competitions/',
                 headers : {
                     'X-CSRFToken': this.csrf_token
                 },
