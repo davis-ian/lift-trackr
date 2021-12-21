@@ -9,8 +9,12 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-from .secrets import resetpass, resetemail
+try:
+    from .secrets import resetpass, resetemail
+except: 
+    pass
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -151,9 +155,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = resetemail
-EMAIL_HOST_PASSWORD = resetpass
-
+EMAIL_HOST_USER = os.environ.get('RESET_EMAIL') or resetemail
+EMAIL_HOST_PASSWORD = os.environ.get('RESET_PASS') or resetpass
 
 import django_on_heroku
 django_on_heroku.settings(locals())
