@@ -20,7 +20,7 @@ def send_friend_request(request, userID):
     # friend_request, created = FriendRequest.objects.get_or_create(from_user=from_user, to_user=to_user)
     from_user.request_out.add(to_user)
     from_user.save()
-    return HttpResponseRedirect('http://127.0.0.1:8000/users/friends')
+    return HttpResponseRedirect('/users/friends')
     # if created:
     #     return HttpResponse('Friend request sent')
     # else: 
@@ -35,7 +35,7 @@ def accept_friend_request (request, requestID):
     from_user.friends.add(to_user)
     to_user.save()
     from_user.save()
-    return HttpResponseRedirect('http://127.0.0.1:8000/users/friends')
+    return HttpResponseRedirect('/users/friends')
 
 def deny_friend_request (request, requestID):
     from_user = CustomUser.objects.get(id=request.user.id)
@@ -44,7 +44,7 @@ def deny_friend_request (request, requestID):
     to_user.request_in.remove(from_user)
     to_user.save()
     from_user.save()
-    return HttpResponseRedirect('http://127.0.0.1:8000/users/friends')
+    return HttpResponseRedirect('/users/friends')
 
 class CompetitionDetailView(DetailView):
     model = Competition

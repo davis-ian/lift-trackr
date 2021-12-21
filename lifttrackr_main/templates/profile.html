@@ -10,13 +10,13 @@
     <div>
         <h2>{{user.username}}'s Profile</h2>
         <p>Lifting since: {{user.date_joined}}</p>
-        <p>Current Streak: {{user.streak}}</p>
+
     </div>
 
     
 
     <div>
-        <h3>MyCompetitions</h3>
+        <h3>My Competitions</h3>
         <div v-for="comp in allCompetitions">
             <div  v-for="score in comp.score_details">              
                 <div id="compdiv" v-if="score.user===currentUser.id" >
