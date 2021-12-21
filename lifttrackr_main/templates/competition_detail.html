@@ -9,7 +9,7 @@
 <div class="competition_detail">
 
     
-    <a class="splash" href="http://127.0.0.1:8000/users/competitions/" >
+    <a class="splash" href="/users/competitions/" >
         <i class="fas fa-chevron-left"></i></a>
     <br>
     <div v-if="current_competition.creator != currentUser.id">
@@ -150,7 +150,7 @@
 </div> 
 
 {% else %}
-<a class="splash" href="http://127.0.0.1:8000/" >
+<a class="splash" href="/" >
     <i class="fas fa-chevron-left"></i></a>
 <h1>It doesn't look like you are currently logged in</h1>
 {% endif %}
