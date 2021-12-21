@@ -154,3 +154,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = resetemail
 EMAIL_HOST_PASSWORD = resetpass
 
+
+import django_on_heroku
+django_on_heroku.settings(locals())
