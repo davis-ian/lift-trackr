@@ -26,21 +26,21 @@
 
    
     <div v-if="currentUser.request_in_details.length!=0">
-        <h3>Friend Requests:</h3>
+        <h3>Friend Requests</h3>
         <div v-for="user in currentUser.request_in_details">
             <p><a :href="`accept_friend_request/${user.id}/`">Accept</a> [[user.username]]</p>
         </div>
     </div>
 
     <div v-if="currentUser.request_out_details.length!=0">
-        <h3>Sent:</h3>
+        <h3>Sent</h3>
         <div v-for="user in currentUser.request_out_details">
             <p>[[user.username]] | Pending</p>
         </div>
     </div>
 
     <div>
-        <h3>[[currentUser.username]]'s' Friends:</h3>
+        <h3>[[currentUser.username]]'s' Friends</h3>
         <div v-for="user in currentUser.friends_list">
             <p><button>Del</button> [[user.username]]</p>
         </div>
