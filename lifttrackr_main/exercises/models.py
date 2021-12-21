@@ -8,7 +8,7 @@ from users.models import CustomUser
 class Exercise(models.Model):
     name = models.CharField(max_length=200)
     uuid = models.CharField(max_length=250)
-    description = models.CharField(max_length=250)
+    description = models.CharField(max_length=600)
     
 
     def __str__(self):
