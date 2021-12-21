@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Friends{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+{% csrf_token %}
+
+<div class="friends">
+
+    <h2>Friends</h2>
+
+    <input type="text" @keydown.enter="search_users()" v-model="search_text" placeholder="Search"/>
+    <button @click="search_users()">Search Users</button>
+
+    <div v-for="user in user_results">
+        <div v-if="user.id != currentUser.id">
+            <p>[[user.username]]</p>  
+
+            <div v-if="!currentUser.friends_list.map(friend => friend.id).includes(user.id)">
+                <a :href="`send_friend_request/${user.id}/`">Send Friend Request</a>
+            </div>
+            <hr>
+        </div>
+    </div>
+
+   
+    <div v-if="currentUser.request_in_details.length!=0">
+        <h3>Friend Requests:</h3>
+        <div v-for="user in currentUser.request_in_details">
+            <p><a :href="`accept_friend_request/${user.id}/`">Accept</a> [[user.username]]</p>
+        </div>
+    </div>
+
+    <div v-if="currentUser.request_out_details.length!=0">
+        <h3>Sent:</h3>
+        <div v-for="user in currentUser.request_out_details">
+            <p>[[user.username]] | Pending</p>
+        </div>
+    </div>
+
+    <div>
+        <h3>[[currentUser.username]]'s' Friends:</h3>
+        <div v-for="user in currentUser.friends_list">
+            <p>[[user.username]]</p>
+        </div>
+    </div>
+    
+</div>
+{% else %}
+
+<p>Please login to view this page</p>
+
+{% endif %}
+{% endblock%}

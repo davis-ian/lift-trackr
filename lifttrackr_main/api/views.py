@@ -57,6 +57,8 @@ class WorkoutTemplateViewSet(viewsets.ModelViewSet):
 class CompetitionViewSet(viewsets.ModelViewSet):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title']
 
 class CompExerciseViewSet(viewsets.ModelViewSet):
     queryset = CompExercise.objects.all() 

@@ -8,97 +8,102 @@
 
 <div class="competition_detail">
 
-    <h5><a href="http://127.0.0.1:8000/users/competitions/">Back</a></h5>
     
-    <div v-if="!participants_contains()" >
-        <button @click="join_competition()">Join Competition</button>
+    <a class="splash" href="http://127.0.0.1:8000/users/competitions/" >
+        <i class="fas fa-chevron-left"></i></a>
+    <br>
+    <div v-if="current_competition.creator != currentUser.id">
+        <div v-if="!participants_contains()" >
+            <button v-if="in_range(current_competition.start_date, current_competition.stop_date)"
+            @click="join_competition()">Join Competition</button>
+        </div>
+    </div>
+    
+   
+
+    <div id="comp_edit" v-if="current_competition.creator === currentUser.id">                
+        <h1><button class="green_btn2" @click="edit_competition()"><i class="fas fa-ellipsis-h"></i></button></h1>                       
     </div>
 
-    {% comment %} <div v-if="comp_session===true">
-        <br>
-        <button @click="cancel_workout()">Cancel</button>
-        <div v-for="exercise in current_competition.comp_exercise_details">
-            <p><button @click="new_comp_exercise_instance(exercise)">Start</button> [[exercise.exercise_detail.name]]</p>
-        </div>
-        <h3>Current Session:</h3>
-        <div v-for="inst in reversed_sessions[0].exercise_instance_detail">
-            <h4>[[inst.exercise_detail.name]]</h4>
-            <div v-for="set in inst.set_detail">
-                <p>Set [[set.set]]: [[set.reps]] reps @ [[set.weight]] lbs. </p>
-            </div>
-            <set-counter :inst='inst'></set-counter>
-        </div>
-        <button v-if="reversed_sessions[0].exercise_instance_detail.length>0" @click="score_upload(current_competition)">Finish</button>
-    </div> {% endcomment %}
-
     <div class="comp_detail_title">
-        <h2>[[current_competition.title]]</h2>        
+        <h1 id="comp_title">[[current_competition.title]]</h1>
+    </div>
 
-        <div v-if="current_competition.creator === currentUser.id">
-            <div id="comp_edit" v-if="comp_exercise_length()!=0">
-                
-                <button @click="edit_competition()"><i class="fas fa-cog"></i></button>
-            </div>
-            <div v-if="comp_exercise_length()===0">
+
+    <div v-if="comp_exercise_length()===0">
+        <div v-if="current_competition.creator === currentUser.id">  
+            <div v-if="in_range(current_competition.start_date, current_competition.stop_date)">              
                 <button v-if="competition_builder===false" @click="creator_joins_comp">Start Building</button>
             </div>
         </div>
     </div>
 
-    <div class="leaderboard">
-        <h3>Leaderboard:</h3>
-        <div v-for="competitor in current_competition.score_details">
-            <p>[[competitor.user_details.username]] : [[competitor.score]] pts.</p>
-        </div>  
-    </div> 
-
-    <p>Start: [[current_competition.start_date]]</p>
-    <p>Stop: [[current_competition.stop_date]]</p>
-    <p>Notes: [[current_competition.notes]]</p>
-
     <div v-if="competition_builder===true">
+        <button class="black_btn" @click="delete_competition()">Delete Comp</button>
+        <button class="green_btn" @click="toggle_exercises()">Add Exercise</button>
         <template v-if="show_allExercises===true">                        
             <exercise-item id="ex_list_div"
             :allexercises="allExercises"
             ></exercise-item>         
         </template>
-        <button @click="toggle_exercises()">Add Exercise</button>
     </div>
+
+    <div class="leaderboard">
+        <h2 id="countdown" v-html="countdown_time"></h2>
+        <h3>Leaderboard:</h3>
+        <div v-for="competitor in current_competition.score_details">
+            <p>[[competitor.user_details.username]]  [[competitor.score]] pts.</p>
+        </div>  
+    </div> 
+
+    <h3>Starts:</h3>
+    <p v-html="date_format(current_competition.start_date)"></p>
+    <h3>Ends:</h3>
+    <p v-html="date_format(current_competition.stop_date)"></p>
+    
+    <div id="notes">
+        <h3>Ground Rules: </h3> 
+        <p>[[current_competition.notes]]</p>
+    </div>    
 
     <div v-if="comp_exercise_length()!=0">
         <h3>Competition Exercises:</h3>
         <div id="scoring_div" v-for="exercise in current_competition.comp_exercise_details">
             <h4>[[exercise.exercise_detail.name]]: [[exercise.exercise_points]] pts.</h4>
             <div v-if="competition_builder===true">
-                <button @click="delete_comp_exercise(exercise)" v-if="current_competition.creator === currentUser.id"><i class="fas fa-times"></i></button>
+                <button class="green_btn" @click="delete_comp_exercise(exercise)"
+                v-if="current_competition.creator === currentUser.id">
+                <i class="fas fa-times"></i></button>
             </div>
         </div> 
 
         <hr>    
 
-        <div v-if="participants_contains()">            
-            <button v-if="comp_session===false" @click="new_comp_session(current_competition)">New Session</button> 
-            <button v-if="comp_session===true" @click="cancel_workout()">Cancel</button>                     
+        <div v-if="participants_contains()"> 
+            <div v-if="in_range(current_competition.start_date, current_competition.stop_date)">           
+                <button class="green_btn" v-if="comp_session===false" 
+                @click="new_comp_session(current_competition)">New Session</button> 
+                <button class="black_btn" v-if="comp_session===true"
+                 @click="cancel_workout()">Cancel</button>  
+            <div>                   
         </div>
 
-        <div v-if="comp_session===true">
+        <div v-if="comp_session===true">            
+            
+            <button class="green_btn" v-if="reversed_sessions[0].exercise_instance_detail.length>0"
+            @click="score_upload(current_competition)">Finish</button>   
             
             <h3>Current Session:</h3>
-            <div v-for="inst in reversed_sessions[0].exercise_instance_detail">
-                <h4>[[inst.exercise_detail.name]]</h4>
-                <div v-for="set in inst.set_detail">
-                    <p>Set [[set.set]]: [[set.reps]] reps @ [[set.weight]] lbs. </p>
-                </div>
-                <set-counter :inst='inst'></set-counter>
-            </div>
             
-            
-            <button v-if="reversed_sessions[0].exercise_instance_detail.length>0" @click="score_upload(current_competition)">Finish</button>               
+            <session 
+            :currentuser="currentUser"
+            ></session>            
             
 
             <div id="start_comp_exercise" v-for="exercise in current_competition.comp_exercise_details">
-                <button @click="new_comp_exercise_instance(exercise)"><i class="fas fa-plus"></i></button>
-                <p>[[exercise.exercise_detail.name]]</p>
+                <button @click="new_comp_exercise_instance(exercise)">
+                <i class="fas fa-plus"></i>
+                [[exercise.exercise_detail.name]] | [[exercise.exercise_points]] pts.</button>
             </div>
         </div>
 
@@ -106,14 +111,15 @@
 
         <div v-for="session in current_competition.session_details">
             <div class="comp_session_wrapper">
-                <h4>[[session.user_detail[0].username]]</h4>
+                <h3>[[session.user_detail[0].username]]</h3>
                 <div v-if="session.user_detail[0].username === currentUser.username">
-                    <button @click="delete_workout(session)" ><i class="fas fa-trash-alt"></i></button>
+                    <button class="black_btn3" @click="delete_workout(session)">
+                    <i class="fas fa-trash-alt"></i></button>
                 </div>
             </div>
 
             <div v-for="exercise in session.exercise_instance_detail">
-                <h4>[[exercise.exercise_detail.name]]</h4>
+                <h5>[[exercise.exercise_detail.name]]</h5>
                 <div v-for="set in exercise.set_detail">
                     <p>Set [[set.set]]: [[set.reps]] reps @ [[set.weight]] lbs.</p>
                 </div>
@@ -123,13 +129,15 @@
         </div>
 
         <div v-if="participants_contains()">
-            <button @click="quit_competition()">Quit Competition</button>
+            <button class="black_btn" @click="quit_competition()">Quit Competition</button>
         </div>
     </div>    
      
 </div> 
 
 {% else %}
+<a class="splash" href="http://127.0.0.1:8000/" >
+    <i class="fas fa-chevron-left"></i></a>
 <h1>It doesn't look like you are currently logged in</h1>
 {% endif %}
 {% endblock %}

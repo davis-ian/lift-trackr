@@ -50,7 +50,7 @@ class CompExercise(models.Model):
         return f'{self.exercise} | {self.exercise_points}'
 
 class Session(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now=True)
     user = models.ManyToManyField(CustomUser, related_name="sessions")
     competition = models.ManyToManyField(Competition, related_name="sessions", blank=True)
     

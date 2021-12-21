@@ -12,16 +12,19 @@
 
         <div v-for="session in reversed_sessions">
             <div id="my_sessions">
-                <h2>[[session.date]]</h2>
+                
+                <h3 v-html="date_format(session.date)"></h3>
                 <div v-for="exercise in session.exercise_instance_detail">
                     <h4>[[exercise.exercise_detail.name]]</h4>
                     <div v-for="set in exercise.set_detail">
                         <p>Set [[set.set]]: [[set.reps]] reps @ [[set.weight]] lbs.</p>
                     </div>
                     <hr>
-                </div>                
-                <h3><a @click="delete_workout(session)"><i class="fas fa-trash-alt"></i></a></h3>                
-                <save-template :session="session"></save-template>               
+                </div>  
+                <div id="history_button_flex">              
+                    <h3><a class="black_btn3" @click="delete_workout(session)"><i class="fas fa-trash-alt"></i></a></h3>                
+                    <save-template :session="session"></save-template>   
+                </div>            
             </div>
             
         </div>

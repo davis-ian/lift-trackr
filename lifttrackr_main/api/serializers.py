@@ -119,11 +119,11 @@ class NestedCategorySerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    session_details = NestedSessionSerializer(source='sessions', many=True)
-    workout_templates = NestedWorkoutTemplateSerializer(source='templates', many=True)
-    request_in_details = NestedRequestSerializer(source='request_in', many=True)
-    request_out_details = NestedRequestSerializer(source='request_out', many=True)
-    friends_list = NestedRequestSerializer(source='friends', many=True)
+    session_details = NestedSessionSerializer(source='sessions', many=True, read_only=True)
+    workout_templates = NestedWorkoutTemplateSerializer(source='templates', many=True, read_only=True)
+    request_in_details = NestedRequestSerializer(source='request_in', many=True, read_only=True)
+    request_out_details = NestedRequestSerializer(source='request_out', many=True, read_only = True)
+    friends_list = NestedRequestSerializer(source='friends', many=True, read_only=True)
     class Meta :
         fields = (
             'id',

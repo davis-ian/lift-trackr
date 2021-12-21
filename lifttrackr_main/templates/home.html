@@ -16,30 +16,31 @@
                 
                 <div id="start_work">
                     <div v-if="current_session===false">
-                        <h2 v-if="current_session===false"><a href="http://127.0.0.1:8000/users/history">History</a></h2>
-                        <h2><a @click="resume_workout()">Resume Workout</a></h2>
-                        <h2><a @click="toggle_new_workout()">New Workout</a></h2>
-                        <h2><a @click="toggle_temps()">My Templates</a></h2>
-                        <h2><a @click="start_template()" >New Template</a></h2>
-                        <h2><a href="http://127.0.0.1:8000/users/competitions/">Competitions</a></h2>
-                        <h2><a href="http://127.0.0.1:8000/users/profile">Profile</a></h2>
-                        <hr>
+                        <h2><a class="green_btn" @click="toggle_new_workout()">New Workout</a></h2>
+                        <h2><a class="green_btn" @click="resume_workout()">Resume Workout</a></h2>
+                        <h2><a class="green_btn" href="http://127.0.0.1:8000/users/competitions/">Competitions</a></h2>
+                        <h2><a class="green_btn" @click="toggle_temps()">My Templates</a></h2>
+                        <h2><a class="green_btn" @click="start_template()" >New Template</a></h2>
+                        <h2><a class="green_btn" href="http://127.0.0.1:8000/users/friends">Friends</a></h2>
+                        <h2><a class="green_btn" href="http://127.0.0.1:8000/users/profile">Profile</a></h2>
+                        <h2><a class="green_btn" href="http://127.0.0.1:8000/users/history">History</a></h2>
+                        
+                        
                     </div>
                     <div v-if="current_session===true">
-                        <session 
-                        :currentuser="currentUser"
-                        ></session>
-                        
-                            <br>
-                            <hr>
+                        <div class="find_exercises">
+            
                             <input id="searchinput" type="text" @keydown.enter="search_exercise()" v-model="search_text" placeholder="Search"/>
                             <button @click="search_exercise()">Search</button>
                             <br>
                             <button @click="toggle_categories()">Categories</button>
                             <button @click="toggle_exercises()">List</button>
                             <button @click="toggle_temps()">Templates</button>
-                            <hr>
-                            
+                        </div>
+                        
+                        <session 
+                        :currentuser="currentUser"
+                        ></session>
                         
                     </div>
 
@@ -59,13 +60,15 @@
 
                     <div id="template_creator">
                         <div v-if="template_start===true">
-                            <button @click="toggle_exercises()">List</button>
-                            <button @click="toggle_categories()">Categories</button>
+                            <hr>
                             <input type="text" v-model="search_text" @keydown.enter="search_exercise()" placeholder="Search">
-                            <button @click="search_exercise()">Search</button>
+                            <button class="green_btn" @click="search_exercise()">Search</button>
+                            <br>
+                            <button class="green_btn" @click="toggle_exercises()">List</button>
+                            <button class="green_btn" @click="toggle_categories()">Categories</button>
                             <br><br>
                             <input type="text" v-model="new_template_name" @keydown.enter="save_template()" placeholder="Template Name">
-                            <button @click="save_template()">Save Template</button>
+                            <button class="green_btn" @click="save_template()">Save</button>
                             <br>
                             <h3 v-for="item in template_exercise_list">[[item.name]]
                                 <button @click="remove_from_template(item)">Del</button>
@@ -87,8 +90,7 @@
                     
                     <template v-if="show_results===true">
                         <div id="search_div">
-                            <a @click="close_search"><i class="fas fa-times"></i></a>
-                            
+                            <a @click="close_search"><i class="fas fa-times"></i></a>                            
                             <div>
                                 <div v-for="result in search_results">
                                     <div v-if="template_start===false">
@@ -105,9 +107,12 @@
 
                 <div id="my_temps">
                     <div v-if="show_my_temps===true">
+                        <div v-if="currentUser.workout_templates.length===0">
+                            <p>You don't have any templates saved..</p>
+                        </div>
                         <div v-for="temp in reversed_templates">
                             <template-editor :temp="temp"></template-editor>                           
-                            <button v-if="current_session===true" @click="exercises_from_temp(temp)">Start Session</button>
+                            <button class="green_btn" v-if="current_session===true" @click="exercises_from_temp(temp)">Start Session</button>
                             <hr>          
                         </div>
                     </div> 
