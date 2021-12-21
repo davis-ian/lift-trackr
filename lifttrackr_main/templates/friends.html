@@ -42,7 +42,7 @@
     <div>
         <h3>[[currentUser.username]]'s' Friends</h3>
         <div v-for="user in currentUser.friends_list">
-            <p><button>Del</button> [[user.username]]</p>
+            <p><a :href="`accept_friend_request/${user.id}/`">Del</a> [[user.username]]</p>
         </div>
     </div>
     
