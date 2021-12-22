@@ -605,7 +605,7 @@ let app = new Vue ({
         message: "lift trackr",
         current_session_id: "",
         session_name: "",
-        currentUser: "",
+        currentUser: [],
         search_text: "",
         new_template_name: "",
         user_results: "",
@@ -1379,6 +1379,28 @@ let app = new Vue ({
         },
         comp_over: function (item) {
             console.log(item)
+        },
+        delete_friend: function (friend) {
+            console.log("friend " + friend.id)
+            this.csrf_token = document.querySelector("input[name=csrfmiddlewaretoken]").value
+
+            index = this.currentUser.friends.indexOf(friend.id)
+            console.log("index"+ index)
+            this.currentUser.friends.splice(index, 1)
+
+
+            axios({
+                method: 'patch',
+                url: '/api/v1/currentuser/',
+                headers : {
+                    'X-CSRFToken': this.csrf_token
+                },
+                data: {
+                    'friends': this.currentUser.friends
+                }
+            }).then(response => {
+                this.loadCurrentUser()
+            })
         }
               
        
@@ -1419,6 +1441,7 @@ let app = new Vue ({
         
     },
     mounted: function() {
+        
         this.csrf_token = document.querySelector("input[name=csrfmiddlewaretoken]").value
         
         let path = window.location.pathname.split('/')

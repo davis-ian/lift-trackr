@@ -38,8 +38,8 @@ def accept_friend_request (request, requestID):
     return HttpResponseRedirect('/users/friends')
 
 def deny_friend_request (request, requestID):
-    from_user = CustomUser.objects.get(id=request.user.id)
-    to_user = CustomUser.objects.get(id=requestID)
+    to_user = CustomUser.objects.get(id=request.user.id)
+    from_user = CustomUser.objects.get(id=requestID)
     from_user.request_out.remove(to_user)
     to_user.request_in.remove(from_user)
     to_user.save()

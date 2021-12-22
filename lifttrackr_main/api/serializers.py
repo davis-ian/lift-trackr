@@ -132,6 +132,7 @@ class UserSerializer(serializers.ModelSerializer):
             'request_out_details',
             'request_in_details',
             'friends_list',
+            'friends',
             'streak',
             'workout_templates',
             'session_details',

@@ -28,7 +28,8 @@
     <div v-if="currentUser.request_in_details.length!=0">
         <h3>Friend Requests</h3>
         <div v-for="user in currentUser.request_in_details">
-            <p><a :href="`accept_friend_request/${user.id}/`">Accept</a> [[user.username]]</p>
+            <p><a :href="`accept_friend_request/${user.id}/`">Accept</a>
+                <a :href="`deny_friend_request/${user.id}/`">Deny</a> [[user.username]]</p>
         </div>
     </div>
 
@@ -42,7 +43,7 @@
     <div>
         <h3>[[currentUser.username]]'s' Friends</h3>
         <div v-for="user in currentUser.friends_list">
-            <p><a :href="`accept_friend_request/${user.id}/`">Del</a> [[user.username]]</p>
+            <p><button @click="delete_friend(user)" >Remove</button>[[user.username]]</p>
         </div>
     </div>
     
