@@ -14,8 +14,7 @@
     <br>
     <div v-if="current_competition.creator != currentUser.id">
         <div v-if="!participants_contains()" >
-            <button v-if="in_range(current_competition.start_date, current_competition.stop_date)"
-            @click="join_competition()">Join Competition</button>
+            <button @click="join_competition()">Join Competition</button>
         </div>
     </div>
     

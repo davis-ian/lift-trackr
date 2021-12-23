@@ -101,12 +101,12 @@ i {
     display: flex;
     justify-content: space-between;
 }
-#set_btns {
+.set_btns {
     background-color: white;
     color:#21BF65;
     border: none;
 }
-#set_btns:hover {
+.set_btns:hover {
     color: #168647
 }
 
@@ -342,4 +342,16 @@ i {
 }
 #compdiv {
     height: 1.5em
+}
+/* FEEDBACK */
+#feedback {
+    text-align: center;
+}
+#fb_a {
+    background-color: white;
+    color: #21BF65;
+    border: none;
+}
+.feedback_div {
+    padding: 2em
 }

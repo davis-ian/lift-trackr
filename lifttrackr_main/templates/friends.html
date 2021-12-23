@@ -12,13 +12,15 @@
 
     <input type="text" @keydown.enter="search_users()" v-model="search_text" placeholder="Search"/>
     <button @click="search_users()">Search Users</button>
+    <br>
+    <button v-if="user_results.length!=0" class="set_btns" @click="clear_user_search"><i class="fas fa-times"></i></button>
 
     <div v-for="user in user_results">
         <div v-if="user.id != currentUser.id">
-            <p>[[user.username]]</p>  
+            <p v-if="currentUser.friends_list.map(friend => friend.id).includes(user.id)">[[user.username]]</p>  
 
             <div v-if="!currentUser.friends_list.map(friend => friend.id).includes(user.id)">
-                <a :href="`send_friend_request/${user.id}/`">Send Friend Request</a>
+                <p><a :href="`send_friend_request/${user.id}/`">[[user.username]] <i class="fas fa-user-plus"></i></a></p>
             </div>
             <hr>
         </div>
@@ -41,10 +43,12 @@
     </div>
 
     <div>
-        <h3>[[currentUser.username]]'s' Friends</h3>
+        <h3>[[currentUser.username]]'s Friends <button class="set_btns" @click="toggle_friend_edit()"><i class="fas fa-ellipsis-h"></i></button></h3>
         <div v-for="user in currentUser.friends_list">
-            <p><button @click="delete_friend(user)" >Remove </button>[[user.username]]</p>
+            <p v-if="friend_editor===false">[[user.username]]</p>
+            <button v-if="friend_editor===true" @click="delete_friend(user)" >[[user.username]] <i class="fas fa-user-minus"></i></button>
         </div>
+        
     </div>
     
 </div>

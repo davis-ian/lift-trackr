@@ -295,7 +295,7 @@ Vue.component('set-counter', {
         <input type="number" v-model="reps" placeholder="Reps"/>
         <input @keydown.enter="new_set(workout)" v-model="weight" type="number" placeholder="Weight"/>
         
-        <a id="set_btns" @click="new_set(workout)"><i class="fas fa-plus"></i></a>
+        <a class="set_btns" @click="new_set(workout)"><i class="fas fa-plus"></i></a>
         
     
     </div>   
@@ -359,7 +359,7 @@ Vue.component('session', {
             
             <div v-for="set in workout.set_detail">
                 <p>Set {{set.set}}: {{set.reps}} reps @ {{set.weight}} lbs.
-                <a id="set_btns" v-if="set.set === workout.set_detail.length" @click="delete_set_instance(set)"><i class="fas fa-times"></i></a></p>
+                <a class="set_btns" v-if="set.set === workout.set_detail.length" @click="delete_set_instance(set)"><i class="fas fa-times"></i></a></p>
                
             </div>
 
@@ -639,7 +639,8 @@ let app = new Vue ({
         start_date: "",
         end_date: "",
         countdown_time: "",
-        my_competitions: []
+        my_competitions: [],
+        friend_editor: false
     },
     methods: {
         all_exercises: function() {
@@ -1343,17 +1344,15 @@ let app = new Vue ({
             
             console.log(item)
 
-            var countDownDate = new Date("Jan 5, 2022 15:37:25").getTime()
+            
             var countDownDate2 = new Date(item).getTime()
 
-            console.log(typeof(countDownDate))
-            console.log(countDownDate)
+            
 
-            console.log(typeof(countDownDate2))
-            console.log(countDownDate2)
+            
 
             var x = setInterval(() => {     
-                console.log("beginning")       
+                     
 
                 var now = new Date().getTime()
 
@@ -1381,11 +1380,11 @@ let app = new Vue ({
             console.log(item)
         },
         delete_friend: function (friend) {
-            console.log("friend " + friend.id)
+            
             this.csrf_token = document.querySelector("input[name=csrfmiddlewaretoken]").value
 
             index = this.currentUser.friends.indexOf(friend.id)
-            console.log("index"+ index)
+            
             this.currentUser.friends.splice(index, 1)
 
 
@@ -1401,6 +1400,16 @@ let app = new Vue ({
             }).then(response => {
                 this.loadCurrentUser()
             })
+        },
+        clear_user_search: function () {
+            this.user_results=[]
+        },
+        toggle_friend_edit: function () {
+            if (this.friend_editor===false) {
+                this.friend_editor=true
+            } else {
+                this.friend_editor=false
+            }
         }
               
        

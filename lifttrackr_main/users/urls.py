@@ -23,4 +23,5 @@ urlpatterns = [
     path('competition_detail/<int:pk>/', CompetitionDetailView.as_view(), name='competition_detail'),
     path('competitions/', TemplateView.as_view(template_name='competitions.html'), name='competitions'),
     path('friends', TemplateView.as_view(template_name='friends.html'), name='friends'),
+    
 ]
