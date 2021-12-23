@@ -688,7 +688,9 @@ let app = new Vue ({
                 this.comp_detail_load(path[path.length-2])
             })
         },
-        delete_workout: function (item) {            
+        delete_workout: function (item) {  
+            this.csrf_token = document.querySelector("input[name=csrfmiddlewaretoken]").value
+            
             axios ({
                 method: 'delete',
                 url: '/api/v1/sessions/'+item.id,
