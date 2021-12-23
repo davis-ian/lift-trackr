@@ -3,7 +3,6 @@ Vue.component('comp-exercise-point-input', {
         return {
             point_expand: false,
             exercise_points: ""
-
         }
     },
     props: ['allexercises', 'exercise'],
@@ -14,8 +13,7 @@ Vue.component('comp-exercise-point-input', {
             } else {
                 this.point_expand=false
             }
-        },
-    
+        },    
         add_to_comp: function (item) {
             axios ({
                 method: 'post',
@@ -36,14 +34,12 @@ Vue.component('comp-exercise-point-input', {
                 this.$root.show_results=false
             })
         }
-
     },
     template: `
     <div>       
             <input type="number" v-model="exercise_points" placeholder="Points"/>   
             <button @click="add_to_comp(exercise)" >Add to Comp</button>
     </div>
-
     `
 })
 
@@ -56,8 +52,6 @@ Vue.component('template-editor', {
             template_add: false,
             show_comp_show: false,
             comp_search_results: "",
-            
-
         }
     },
     props: ['temp', 'allexercises'],
@@ -70,13 +64,10 @@ Vue.component('template-editor', {
                 this.template_edit = false
                 this.template_add = false
                 this.comp_search_results = ""
-            }
-            
-            
-            
+            }            
         },
         save_edit: function (item) {
-            console.log(item.id)
+            
             axios({
                 method: 'patch',
                 url: '/api/v1/templates/'+item.id+'/',
@@ -90,8 +81,7 @@ Vue.component('template-editor', {
                 this.$root.loadCurrentUser()
                 this.template_edit_name=""
                 this.template_edit=false
-            })
-            
+            })            
         },
         add_to_temp_comp: function (item) {
            if (this.template_add===false) {
@@ -118,8 +108,7 @@ Vue.component('template-editor', {
         },
         add_comp_item: function (item, temp) {
             let comp_new_temp_list = []
-            console.log(item.id)
-            console.log(temp)
+            
             for (i in temp.temp_details) {
                 comp_new_temp_list.push(temp.temp_details[i].id)
             }
@@ -140,7 +129,7 @@ Vue.component('template-editor', {
             })
         },
         delete_template: function (item) {
-            console.log(item.id)
+            
             axios ({
                 method: 'delete',
                 url: '/api/v1/templates/'+item.id,
@@ -152,11 +141,6 @@ Vue.component('template-editor', {
                 this.template_edit=false
             })
         },
-        
-        
-
-        
-
     },
     template: `
     <div>
@@ -166,8 +150,7 @@ Vue.component('template-editor', {
             <br> 
             <input type="text" @keydown.enter="save_edit(temp)" v-model="template_edit_name" placeholder="template name"/>
             <button class="green_btn" @click="save_edit(temp)">Save</button>
-        </div>
-        
+        </div>        
 
         <h2>{{temp.name}}  <a class="black_btn3" v-if="template_edit===true" @click="delete_template(temp)"><i class="fas fa-times"></i></a></h2>
         <div v-for="workout in temp.temp_details">
@@ -224,10 +207,7 @@ Vue.component('save-template', {
                     "exercises": ex_list,
                 },
             }).then(response => {
-                
-                console.log("before")
                 location.href ="/"
-                console.log("after")
                 this.$root.loadCurrentUser()
                 this.$root.show_my_temps=true
             })
@@ -236,7 +216,6 @@ Vue.component('save-template', {
     template: `
         <div>
         <button class="green_btn" @click="comp_template_save_toggle()">CreateTemplate</button>
-
             <div v-if="save_template_show===true">
                 <input type="text" v-model="template_name" @keydown.enter="save_template(session)" placeholder="Template Name"/>
                 <button class="green_btn" @click="save_template(session)">Save Template</button>
@@ -247,9 +226,7 @@ Vue.component('save-template', {
 
 Vue.component('set-counter', {
     data: function () {
-        return{
-            
-             
+        return{             
             reps: "",
             weight: "",
         }
@@ -257,9 +234,7 @@ Vue.component('set-counter', {
     props: ['workout', 'inst'],
     methods: {
         new_set: function (item) {
-            count = item.set_detail.length + 1
-            
-            
+            count = item.set_detail.length + 1          
 
             axios ({
                 method: 'post',
@@ -286,35 +261,25 @@ Vue.component('set-counter', {
                     alert("Cannot enter blank set")
                 }
             })
-        },
-        
-        
+        },        
     },
     template: `
     <div>
         <input type="number" v-model="reps" placeholder="Reps"/>
-        <input @keydown.enter="new_set(workout)" v-model="weight" type="number" placeholder="Weight"/>
-        
-        <a class="set_btns" @click="new_set(workout)"><i class="fas fa-plus"></i></a>
-        
-    
+        <input @keydown.enter="new_set(workout)" v-model="weight" type="number" placeholder="Weight"/>        
+        <a class="set_btns" @click="new_set(workout)"><i class="fas fa-plus"></i></a>    
     </div>   
     `
-
 })
 
 Vue.component('session', {
     data: function () {
         return{
             session_length: this.$root.currentUser.session_details.length
-             
-
         }
     },
     methods: {
         delete_exercise_instance: function (item) {
-            console.log(item.id)
-
             axios({
                 method: "delete",
                 url: '/api/v1/exerciseinstances/'+item.id,
@@ -326,8 +291,6 @@ Vue.component('session', {
             })
         },
         delete_set_instance: function (item) {
-            console.log(item.id)
-
             axios({ 
                 method: "delete",
                 url: "/api/v1/setinstances/"+item.id,
@@ -337,9 +300,7 @@ Vue.component('session', {
             }).then(response => {
                 this.$root.loadCurrentUser()
             })
-        }
-        
-        
+        }        
     },
     props: ['currentuser', 'reversed_sessions', 'inst'],
     template: `
@@ -350,30 +311,23 @@ Vue.component('session', {
             <button class="black_btn" v-if="$root.resume===false" @click="$root.cancel_workout()">Cancel</button>
         </div>
         <button class="black_btn" v-if="$root.resume===true" @click="$root.cancel_resume()">Cancel</button>
-        <button class="green_btn" v-if="$root.comp_session===false" @click="$root.finish_session()">Finish Workout</button>
+        <button class="green_btn" v-if="$root.comp_session===false" @click="$root.finish_session()">Finish Workout</button>        
         
-        
-        <div v-for="workout in this.$root.reversed_sessions[0].exercise_instance_detail">
-        
-            <h3>{{workout.exercise_detail.name}} <a class="black_btn2" @click="delete_exercise_instance(workout)"><i class="fas fa-times"></i></a></h3>
+        <div v-for="workout in this.$root.reversed_sessions[0].exercise_instance_detail">        
+            <h3>{{workout.exercise_detail.name}} <a class="black_btn2" @click="delete_exercise_instance(workout)">
+            <i class="fas fa-times"></i></a></h3>
             
             <div v-for="set in workout.set_detail">
                 <p>Set {{set.set}}: {{set.reps}} reps @ {{set.weight}} lbs.
-                <a class="set_btns" v-if="set.set === workout.set_detail.length" @click="delete_set_instance(set)"><i class="fas fa-times"></i></a></p>
+                <a class="set_btns" v-if="set.set === workout.set_detail.length" @click="delete_set_instance(set)">
+                <i class="fas fa-times"></i></a></p>
                
-            </div>
-
-            
-            <set-counter :workout="workout"></set-counter>
-    
-    
-        </div>
-        
+            </div>            
+            <set-counter :workout="workout"></set-counter>    
+        </div>        
     </div>
     `
 })
-
-
 
 Vue.component('category', {
     data: function () {
@@ -389,24 +343,18 @@ Vue.component('category', {
             } else {
                 this.show_exercises = true
             }
-        },
-        
+        },        
     },
-    template: `
-           
-            
+    template: `            
         <div>
-        <a class="green_btn" @click="detail_toggle()"><i class="fas fa-chevron-right"></i> {{category.category}}</a>
-        
-        <template>                    
-            <div class="test" v-for="exercise in category['exercise_detail']">
-                
-                <category-exercise v-if="show_exercises===true" :exercise=exercise></category-exercise>
-                
-                
-            </div> 
-                                
-        </template>
+            <a class="green_btn" @click="detail_toggle()"><i class="fas fa-chevron-right"></i> {{category.category}}</a>
+            
+            <template>                    
+                <div class="test" v-for="exercise in category['exercise_detail']">                
+                    <category-exercise v-if="show_exercises===true" :exercise=exercise
+                    ></category-exercise>                
+                </div>                                
+            </template>
         </div>
            
     `
@@ -442,8 +390,7 @@ Vue.component('category-exercise', {
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
-                data: {
-                    
+                data: {                    
                     "exercise": item.id,
                     "session": session,
                 }
@@ -461,7 +408,6 @@ Vue.component('category-exercise', {
             this.$root.show_allCategories=false
             this.$root.show_results=false
         },
-
     },
     created: function () { 
         detail = false
@@ -470,9 +416,9 @@ Vue.component('category-exercise', {
     <div class="category_items">
         <div v-if="$root.current_session===true">            
             <a class="green_btn" @click="add(exercise)">        
-            <i class="fas fa-plus"></i>{{exercise.name}}</a> 
-            
+            <i class="fas fa-plus"></i>{{exercise.name}}</a>            
         </div>
+
         <div v-if="$root.competition_builder===true">
             <p>{{exercise.name}}</p>
             <comp-exercise-point-input :exercise="exercise" ></comp-exercise-point-input>
@@ -486,13 +432,9 @@ Vue.component('category-exercise', {
             <div v-else-if="detail===true">
                 <p>{{exercise.description}}</p>
             </div>
-        </div>
-        
-        
+        </div>        
     </div>
     `
-    
-
 })
 
 Vue.component('category-item', {
@@ -508,14 +450,10 @@ Vue.component('category-item', {
                 this.category_detail_show = true
             } else {
                 this.category_detail_show = false
-            }
-            
+            }            
         }
-        
-
     },
-    template: `
-    
+    template: `    
     <div>
         <a @click="$root.show_allCategories=false"><i class="fas fa-times"></i></a>
         <br>
@@ -525,9 +463,7 @@ Vue.component('category-item', {
                 <category :category=category></category>                
             </div>
         </div>
-    </div>
-    
-   
+    </div>   
     `
 })
 
@@ -535,16 +471,12 @@ Vue.component('exercise-item', {
     data: function() {
         return{
             exercise_points: ""
-
         }
     },
     props: ['allexercises'],
     methods: {
         add: function (item) {
             session = this.$root.reversed_sessions[0].id
-            
-            
-        
 
             axios({
                 method: 'post',
@@ -552,8 +484,7 @@ Vue.component('exercise-item', {
                 headers: {
                     'X-CSRFToken': this.$root.csrf_token
                 },
-                data: {
-                    
+                data: {                    
                     "exercise": item.id,
                     "session": session,
                 }
@@ -562,19 +493,16 @@ Vue.component('exercise-item', {
                 this.$root.show_allCategories=false
                 this.$root.show_allExercises=false
                 this.$root.show_results=false
-            })
-            
+            })            
         },
         add_to_temp: function (item) {
             this.$root.template_exercise_list.push(item)
             this.$root.show_allExercises=false
             this.$root.show_allCategories=false
             this.$root.show_results=false
-        },
-        
+        },        
     },
-    template: `
-    
+    template: `    
     <div>
         <a @click="$root.show_allExercises=false"><i class="fas fa-times"></i></a>
         <div> 
@@ -597,7 +525,6 @@ Vue.component('exercise-item', {
     </div>`
 })
 
-
 let app = new Vue ({
     el: "#app",
     delimiters: [ '[[' , ']]' ],
@@ -605,15 +532,26 @@ let app = new Vue ({
         message: "lift trackr",
         current_session_id: "",
         session_name: "",
-        currentUser: [],
         search_text: "",
         new_template_name: "",
         user_results: "",
+        currentWorkout: "",
+        csrf_token: "",
+        current_competition: "", 
+        start_date: "",
+        stop_date: "",
+        exercise_score: "",
+        start_date: "",
+        end_date: "",
+        countdown_time: "",
+        currentUser: [],
         search_results: [],
         allExercises: [],
         allCategories: [],
         categoryExercises: [],
         allCompetitions: [],
+        my_competitions: [],
+        template_exercise_list: [],
         show_allExercises: false,
         show_allCategories: false,
         expand_categories: false,
@@ -626,20 +564,9 @@ let app = new Vue ({
         edit_temp: false,
         comp_session: false,
         competition_builder: false,
-        currentWorkout: "",
-        csrf_token: "",
         create_session: false, 
-        template_exercise_list: [],
         current_user_point_adjust: 0,     
-        current_competition: "", 
-        start_date: "",
-        stop_date: "",
         resume: false,
-        exercise_score: "",
-        start_date: "",
-        end_date: "",
-        countdown_time: "",
-        my_competitions: [],
         friend_editor: false
     },
     methods: {
@@ -672,8 +599,7 @@ let app = new Vue ({
                 method: 'get',
                 url: '/api/v1/currentuser/',
             }).then(response => {
-                this.currentUser = response.data    
-                           
+                this.currentUser = response.data                            
             })
         },
         newSession: function() {   
@@ -862,7 +788,6 @@ let app = new Vue ({
             this.show_my_temps = false
         },
         add_to_temp: function (item) {
-            console.log(item)
             this.template_exercise_list.push(item)
             this.show_results=false
         },
@@ -904,8 +829,7 @@ let app = new Vue ({
                     alert("Please enter a template name and one or more exercises before saving")
                 }
             })            
-        },
-        
+        },        
         resume_workout: function () {
             let i = this.currentUser.session_details.length-1
             console.log(i)
@@ -930,17 +854,12 @@ let app = new Vue ({
         remove_from_saved_template: function (array, item) {
             let temp_id = array.id
             let new_temp_list = []
-            console.log(temp_id)
-            console.log(array.temp_details)
-            console.log(item.id)
 
             for ( i in array.temp_details) {
-                console.log(array.temp_details[i].id)
                 if (array.temp_details[i].id != item.id) {
                     new_temp_list.push(array.temp_details[i].id)
                 }
-            }
-            console.log(new_temp_list)   
+            }   
 
             axios ({
                 method: 'patch',
@@ -971,7 +890,6 @@ let app = new Vue ({
                 }
             }).then(response => {
                 this.user_results = response.data
-                console.log(this.user_results)
             })
         },
         load_competitions: function () {
@@ -986,9 +904,9 @@ let app = new Vue ({
             })
         },
         score_reset: function () {
-            console.log(this.currentUser.competition_points)
+            
             this.currentUser.competition_points += 5
-            console.log(this.currentUser.competition_points)
+            
 
             axios ({
                 method: 'patch',
@@ -1004,7 +922,6 @@ let app = new Vue ({
             })
         },        
         new_comp_session: function (item) {
-            console.log(item)
 
             axios({
                 method: 'post',
@@ -1025,11 +942,8 @@ let app = new Vue ({
                 let path = window.location.pathname.split('/')
                 this.comp_detail_load(path[path.length-2])
             })
-
         },
         new_comp_exercise_instance: function (item) {
-            console.log(item)
-            console.log(this.reversed_sessions[0].id)
 
             axios ({
                 method: 'post',
@@ -1085,9 +999,7 @@ let app = new Vue ({
             }).then(response => {                
                 this.competition_builder=false
                 this.search_text = ""
-                this.load_competitions()
-
-                
+                this.load_competitions()                
             })
         },
         edit_competition: function () {
@@ -1096,7 +1008,6 @@ let app = new Vue ({
             } else {
                 this.competition_builder = false
             }
-
         },
         cancel_comp_edit () {
             this.competition_builder=false
@@ -1141,10 +1052,8 @@ let app = new Vue ({
                 }).then(response => {
                     let path = window.location.pathname.split('/')
                     this.comp_detail_load(path[path.length-2])
-
                 })
-            })
-                
+            })                
         },
         participants_contains: function() {
             let current_participants = []
@@ -1160,7 +1069,7 @@ let app = new Vue ({
         },
         quit_competition: function () {
             let new_participants = []
-            console.log(this.current_competition.participant_details)
+            
             for (p in this.current_competition.participant_details) {
                 if (this.currentUser.id != this.current_competition.participant_details[p].id)
                 new_participants.push(this.current_competition.participant_details[p].id)
@@ -1184,8 +1093,7 @@ let app = new Vue ({
                     score_id = this.current_competition.score_details[score].id
                     comp_id = this.current_competition.score_details[score].competition
                     user_score = this.current_competition.score_details[score].score
-                    user = this.current_competition.score_details[score].user
-                
+                    user = this.current_competition.score_details[score].user                
                 }
             
                 axios ({ 
@@ -1221,7 +1129,6 @@ let app = new Vue ({
                 let path = window.location.pathname.split('/')
                 this.comp_detail_load(path[path.length-2])
                 this.competition_builder=true
-
             })
         },
         score_upload: function(item) {
@@ -1247,26 +1154,19 @@ let app = new Vue ({
                 }
 
                 for (i in this.reversed_sessions[0].exercise_instance_detail) {
-                    console.log(this.reversed_sessions[0].exercise_instance_detail[i].exercise)
-                    for (x in item.comp_exercise_details) {
-                        if (this.reversed_sessions[0].exercise_instance_detail[i].exercise === item.comp_exercise_details[x].exercise) {
-                            console.log(`${this.reversed_sessions[0].exercise_instance_detail[i].exercise} = ${item.comp_exercise_details[x].exercise}`)
-                            console.log(`${this.reversed_sessions[0].exercise_instance_detail[i].exercise} = ${item.comp_exercise_details[x].exercise_points}`)
-                            exercise_value = item.comp_exercise_details[x].exercise_points
-                        
                     
-                            for (set in this.reversed_sessions[0].exercise_instance_detail[i].set_detail) {
-                                console.log(this.reversed_sessions[0].exercise_instance_detail[i].set_detail[set].reps)
+                    for (x in item.comp_exercise_details) {
+                        if (this.reversed_sessions[0].exercise_instance_detail[i].exercise === item.comp_exercise_details[x].exercise) {                            
+                            exercise_value = item.comp_exercise_details[x].exercise_points                        
+                    
+                            for (set in this.reversed_sessions[0].exercise_instance_detail[i].set_detail) {                                
                                 total_reps += this.reversed_sessions[0].exercise_instance_detail[i].set_detail[set].reps
-                            }
-                            console.log(`${this.reversed_sessions[0].exercise_instance_detail[i].exercise} - ${total_reps}`)
-                            total_score += exercise_value*total_reps
-                            
+                            }                            
+                            total_score += exercise_value*total_reps                            
                             total_reps = 0
                         }
                     }
-                }
-                console.log(total_score)
+                }      
 
                 let new_score = user_score + total_score
 
@@ -1297,20 +1197,14 @@ let app = new Vue ({
             } else {return false}           
         },
         date_format: function (item) {
-
             let regex =/GMT.*/
             
             z = new Date(item).toString()
             z = z.replace(regex, '')
-            // z = z.replace(' GMT-0800 (Pacific Standard Time)', '')
-
-            // z = z.replace('\([^\(]*\)', ' ')
-            // console.log(z)
-            return z
-            
+            return z            
         },
         delete_competition: function () {
-            console.log(this.current_competition.id)
+    
             axios ({
                 method: 'delete',
                 url: '/api/v1/competitions/'+this.current_competition.id+'/',
@@ -1320,7 +1214,6 @@ let app = new Vue ({
             }).then(response => {
             
                 location.href = '/users/competitions/'
-
             })
         },
         search_competitions: function () {
@@ -1339,33 +1232,19 @@ let app = new Vue ({
                 this.search_text = ""
             })
         },
-        countdown: function (item) {
-            // "Jan 5, 2022 15:37:25"
-            
-            console.log(item)
-
-            
-            var countDownDate2 = new Date(item).getTime()
-
-            
-
-            
-
+        countdown: function (item) {            
+            var countDownDate = new Date(item).getTime()
             var x = setInterval(() => {     
                      
 
                 var now = new Date().getTime()
 
-                var distance = countDownDate2 - now
+                var distance = countDownDate - now
                 
                 var days = Math.floor(distance / (1000 * 60 * 60 * 24))
                 var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000)            
-                
-                // document.getElementById("countdown").innerHTML=
-                // v-html="countdown(current_competition.stop_date)"
-                
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000)                
 
                 this.countdown_time = days+"d "+hours+"h "+minutes+"m "+seconds+"s "
                 
@@ -1376,17 +1255,11 @@ let app = new Vue ({
                 }
             }, 1000)
         },
-        comp_over: function (item) {
-            console.log(item)
-        },
         delete_friend: function (friend) {
             
             this.csrf_token = document.querySelector("input[name=csrfmiddlewaretoken]").value
-
-            index = this.currentUser.friends.indexOf(friend.id)
-            
+            index = this.currentUser.friends.indexOf(friend.id)            
             this.currentUser.friends.splice(index, 1)
-
 
             axios({
                 method: 'patch',
@@ -1410,8 +1283,7 @@ let app = new Vue ({
             } else {
                 this.friend_editor=false
             }
-        }
-              
+        },      
        
     },
     
@@ -1429,11 +1301,7 @@ let app = new Vue ({
         reversed_competitions: function () {
             if (this.allCompetitions)
                 return this.allCompetitions.slice().reverse()
-        },
-       
-        
-        
-       
+        },       
 
     },
     
@@ -1442,11 +1310,7 @@ let app = new Vue ({
         this.getSession()
         this.all_categories()
         this.all_exercises()
-        this.load_competitions()
-        
-        
-        
-        
+        this.load_competitions()       
         
     },
     mounted: function() {
@@ -1455,14 +1319,6 @@ let app = new Vue ({
         
         let path = window.location.pathname.split('/')
         this.comp_detail_load(path[path.length-2])
-
-        
-        
-        
-        
-
-        
-
         
     }
 })
