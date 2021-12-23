@@ -144,6 +144,7 @@ i {
 .signup_wrapper {
     padding: 2em;
     background-color:#21BF65;
+    min-height: 100vh;
 
 }
 .signup {
