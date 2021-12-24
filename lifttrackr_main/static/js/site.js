@@ -1289,13 +1289,17 @@ let app = new Vue ({
             }
         },
         session_contains: function (item) {
-            for ( i in this.reversed_sessions[0].exercise_instance_detail) {
-                if (this.reversed_sessions[0].exercise_instance_detail[i].exercise === item.exercise) {
-                    return true 
-                } else {
-                    return false
-                }
+            sesh = []
+            
+            for (i in this.reversed_sessions[0].exercise_instance_detail) {
+                
+                sesh.push(this.reversed_sessions[0].exercise_instance_detail[i].exercise)
             }
+            if (sesh.includes(item.exercise)) {
+                return true
+            } else {
+                return false
+            }           
         }    
        
     },
