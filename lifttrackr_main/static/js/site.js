@@ -154,7 +154,8 @@ Vue.component('template-editor', {
 
         <h2>{{temp.name}}  <a class="black_btn3" v-if="template_edit===true" @click="delete_template(temp)"><i class="fas fa-times"></i></a></h2>
         <div v-for="workout in temp.temp_details">
-            <h4><button class="black_btn3" v-if="template_edit===true" @click="$root.remove_from_saved_template(temp, workout)">{{workout.name}} <i class="fas fa-times"></i></button></h4>                                
+            <h4><button class="black_btn3" v-if="template_edit===true" @click="$root.remove_from_saved_template(temp, workout)">{{workout.name}} <i class="fas fa-times"></i></button></h4>  
+            <h4 v-if="template_edit===false">{{workout.name}}</h4>                              
         </div>
         <button class="green_btn" v-if="template_edit===true" @click="add_to_temp_comp(temp)">Add</button>
         
@@ -416,7 +417,7 @@ Vue.component('category-exercise', {
     <div class="category_items">
         <div v-if="$root.current_session===true">            
             <a class="green_btn" @click="add(exercise)">        
-            <i class="fas fa-plus"></i>{{exercise.name}}</a>            
+            <i class="fas fa-plus"></i> {{exercise.name}}</a>            
         </div>
 
         <div v-if="$root.competition_builder===true">
@@ -426,13 +427,12 @@ Vue.component('category-exercise', {
 
         <div v-else-if="$root.template_start===true">
             <a class="green_btn" @click="add_to_temp(exercise)">        
-            <i class="fas fa-plus"></i>{{exercise.name}}</a>
-            
-        </div>          
-            <div v-else-if="detail===true">
-                <p>{{exercise.description}}</p>
-            </div>
-        </div>        
+            <i class="fas fa-plus"></i> {{exercise.name}}</a>            
+        </div>   
+
+        <div v-else-if="detail===true">
+            <p>{{exercise.description}}</p>
+        </div>
     </div>
     `
 })
@@ -683,6 +683,8 @@ let app = new Vue ({
                 this.create_session = false
                 this.show_my_temps = false
                 this.comp_session = false
+                this.show_allCategories = false
+                this.show_allExercises = false
 
                 let path = window.location.pathname.split('/')
                 this.comp_detail_load(path[path.length-2])
@@ -1285,7 +1287,16 @@ let app = new Vue ({
             } else {
                 this.friend_editor=false
             }
-        },      
+        },
+        session_contains: function (item) {
+            for ( i in this.reversed_sessions[0].exercise_instance_detail) {
+                if (this.reversed_sessions[0].exercise_instance_detail[i].exercise === item.exercise) {
+                    return true 
+                } else {
+                    return false
+                }
+            }
+        }    
        
     },
     

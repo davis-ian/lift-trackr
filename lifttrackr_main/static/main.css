@@ -96,6 +96,11 @@ i {
 .black_btn3:hover{
     color: #F25041
 }
+.border_btn {
+    border:2px solid #21BF65;
+    background-color: white;
+    color: #21BF65;
+}
 
 #nav_buttons {
     display: flex;

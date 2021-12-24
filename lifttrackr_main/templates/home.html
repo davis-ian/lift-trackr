@@ -72,7 +72,7 @@
                             <button class="green_btn" @click="save_template()">Save</button>
                             <br>
                             <h3 v-for="item in template_exercise_list">[[item.name]]
-                                <button @click="remove_from_template(item)">Del</button>
+                                <button class="black_btn3" @click="remove_from_template(item)"><i class="fas fa-times"></i></button>
                             </h3>
                         </div>
                     </div>
