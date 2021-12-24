@@ -848,6 +848,7 @@ let app = new Vue ({
                 this.loadCurrentUser()
                 this.current_session=true
                 this.resume=true
+                this.show_my_temps=false
             })
             
         },
