@@ -1,6 +1,6 @@
 # lift-trackr
 
-http://lifttrackr.herokuapp.com/
+https://lifttrackr.herokuapp.com/
 
 
 
