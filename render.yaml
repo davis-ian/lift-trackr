@@ -7,10 +7,8 @@ services:
     env: docker # valid values: https://render.com/docs/yaml-spec#environment
     dockerfilePath: Dockerfile.render
     plan: free # optional; defaults to starter
-    numInstances: 0
     envVars:
       - key: RESET_EMAIL # Imported from Heroku app
         value: lifttrackrhelp@gmail.com
       - key: RESET_PASS # Imported from Heroku app
         value: Stuntmanmike6481
-
