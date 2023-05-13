@@ -151,12 +151,12 @@ LOGOUT_REDIRECT_URL = 'home'
 
 #SMTP Config
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('RESET_EMAIL') or resetemail
-EMAIL_HOST_PASSWORD = os.environ.get('RESET_PASS') or resetpass
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = os.environ.get('RESET_EMAIL') or resetemail
+# EMAIL_HOST_PASSWORD = os.environ.get('RESET_PASS') or resetpass
 
 import django_on_heroku
 django_on_heroku.settings(locals())
